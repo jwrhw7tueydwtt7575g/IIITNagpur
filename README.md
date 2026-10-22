@@ -2,6 +2,10 @@
 
 > A smart-city decision-support platform for cascading-failure simulation, historical flood replay, GIS visualization, and resilient emergency routing.
 
+**[Live interface](https://citygraph-intelligence.vercel.app/) · [Source code](https://github.com/rajsalonia/citygraph) · [Architecture](#️-system-architecture) · [Run locally](#-run-locally)**
+
+> **Prototype scope:** Synthetic infrastructure scenarios and reconstructed historical references. Not intended for live emergency operations or evacuation decisions.
+
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/Frontend-React%2019-61DAFB.svg?style=flat&logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Bundler-Vite%208-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
@@ -201,3 +205,49 @@ flowchart TD
     GraphAPI --> Cytoscape
     HistoricalAPI --> Leaflet
     NepalAPI --> SVG
+```
+
+---
+
+## 🧑‍💻 Run Locally
+
+**Requirements:** Python 3.11+, Node.js 20+, and npm. The Python API and Vite frontend run as separate local processes.
+
+**Backend** (terminal 1):
+
+```bash
+cd backend
+python -m venv .venv
+# Activate .venv (Windows: .venv\\Scripts\\activate; macOS/Linux: source .venv/bin/activate)
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8000
+```
+
+**Frontend** (terminal 2, from the repository root):
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Set the documented environment values from [`.env.example`](.env.example), especially a strong backend secret, when using authentication. See [`render.yaml`](render.yaml) for the example backend hosting configuration.
+
+## 🧩 Engineering Highlights
+
+- **Graph modeling:** NetworkX infrastructure dependencies, cascading failures, and failure-aware shortest paths.
+- **Geospatial interaction:** Leaflet and spatial overlays for historical and illustrative flood scenarios.
+- **API architecture:** FastAPI endpoints connect graph simulation, historical data, and visualization modules.
+- **Authentication demo:** JWT-based API access with SQLite-backed user records; harden before public production use.
+
+## ⚠️ Data & Deployment Notes
+
+- Infrastructure networks, Nepal valley conditions, and failure outcomes are simulations or reconstructed educational references, **not live operational feeds**.
+- The frontend demo URL is provided for portfolio access; availability depends on the external host and the configured backend.
+- Do not use generated routes or risk values to direct actual emergency response.
+
+## 🔗 Project Links
+
+- **Frontend demo:** https://citygraph-intelligence.vercel.app/
+- **Code:** https://github.com/rajsalonia/citygraph
+- **License:** [MIT](LICENSE)
