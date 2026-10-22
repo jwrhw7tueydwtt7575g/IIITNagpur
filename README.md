@@ -2,7 +2,7 @@
 
 > A smart-city decision-support platform for cascading-failure simulation, historical flood replay, GIS visualization, and resilient emergency routing.
 
-**[Live interface](https://citygraph-intelligence.vercel.app/) · [Source code](https://github.com/rajsalonia/citygraph) · [Architecture](#️-system-architecture) · [Run locally](#-run-locally)**
+**[Live interface](https://citygraph-intelligence.vercel.app/) · [Source code](https://github.com/rajsalonia/citygraph) · [Architecture](#system-architecture) · [Run locally](#-run-locally)**
 
 > **Prototype scope:** Synthetic infrastructure scenarios and reconstructed historical references. Not intended for live emergency operations or evacuation decisions.
 
@@ -165,7 +165,7 @@ The authentication system is intended for local development and demonstration.
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```mermaid
 flowchart TD
@@ -250,4 +250,5 @@ Set the documented environment values from [`.env.example`](.env.example), espec
 
 - **Frontend demo:** https://citygraph-intelligence.vercel.app/
 - **Code:** https://github.com/rajsalonia/citygraph
+- **Contributing:** [Contribution guide](CONTRIBUTING.md)
 - **License:** [MIT](LICENSE)
