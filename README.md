@@ -251,4 +251,5 @@ Set the documented environment values from [`.env.example`](.env.example), espec
 - **Frontend demo:** https://citygraph-intelligence.vercel.app/
 - **Code:** https://github.com/rajsalonia/citygraph
 - **Contributing:** [Contribution guide](CONTRIBUTING.md)
+- **Security:** [Responsible disclosure](SECURITY.md)
 - **License:** [MIT](LICENSE)
