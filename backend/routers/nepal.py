@@ -6,7 +6,6 @@ from auth_utils import get_current_user
 router = APIRouter(
     prefix="/api/nepal",
     tags=["Nepal Flash-Flood Reference Scenario"],
-    dependencies=[Depends(get_current_user)],
 )
 
 NEPAL_DISCLAIMER = (
