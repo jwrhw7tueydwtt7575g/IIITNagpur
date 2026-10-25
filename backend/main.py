@@ -1055,7 +1055,7 @@ def api_health_check():
 
 
 @app.get("/graph")
-def get_graph(current_user: User = Depends(get_current_user)):
+def get_graph():
     return get_complete_graph_response()
 
 
@@ -1063,7 +1063,6 @@ def get_graph(current_user: User = Depends(get_current_user)):
 def simulate_heavy_rain(
     request_body: RainRequest,
     request: Request,
-    current_user: User = Depends(get_current_user),
 ):
     # Rate limit simulation (10 requests per minute per IP to prevent CPU exhaustion)
     limiter.check_rate_limit(request, endpoint_key="simulate_heavy_rain", max_requests=10, window_seconds=60)
@@ -1073,7 +1072,6 @@ def simulate_heavy_rain(
 @app.post("/reset")
 def reset(
     request: Request,
-    current_user: User = Depends(get_current_user),
 ):
     limiter.check_rate_limit(request, endpoint_key="reset_simulation", max_requests=15, window_seconds=60)
     reset_simulation_state()
@@ -1092,7 +1090,6 @@ class RouteRequest(BaseModel):
 def calculate_emergency_route(
     req: RouteRequest,
     request: Request,
-    current_user: User = Depends(get_current_user),
 ):
     # Rate limit routing requests (30 requests per minute per IP)
     limiter.check_rate_limit(request, endpoint_key="calculate_route", max_requests=30, window_seconds=60)
