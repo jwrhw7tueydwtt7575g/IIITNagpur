@@ -10,7 +10,6 @@ export default function SettingsView({
   loading = false,
 }) {
   const [copied, setCopied] = useState(false);
-  const [renderStatus, setRenderStatus] = useState('operational');
   const [telemetrySync, setTelemetrySync] = useState(true);
   const [highContrastMap, setHighContrastMap] = useState(false);
 

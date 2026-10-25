@@ -5,7 +5,7 @@ import './MapView.css';
 import HistoricalBanner from './HistoricalBanner.jsx';
 import TimelineSlider from './TimelineSlider.jsx';
 import EmergencyRouteCard from '../Common/EmergencyRouteCard.jsx';
-import { useAuth } from '../../context/AuthContext.jsx';
+import { useAuth } from '../../context/useAuth.js';
 
 const DELHI_LOCATIONS = [
   { id: 'all', name: 'All Delhi Region', lat: 28.6500, lng: 77.2350, zoom: 12 },

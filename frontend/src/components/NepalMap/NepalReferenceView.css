@@ -507,23 +507,20 @@
 
 .marker-critical {
   background: #ef4444;
-  box-shadow: 0 0 6px #ef4444;
 }
 
 .marker-threatened {
   background: #f59e0b;
-  box-shadow: 0 0 6px #f59e0b;
 }
 
 .marker-safe {
-  background: #38bdf8;
-  box-shadow: 0 0 6px #38bdf8;
+  background: #2563eb;
 }
 
 .marker-evac {
   background: #10b981;
-  box-shadow: 0 0 6px #10b981;
 }
+
 
 /* Sidebar: Inspector & Route */
 .nepal-sidebar {

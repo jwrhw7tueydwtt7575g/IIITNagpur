@@ -1,0 +1,18 @@
+sources:
+  - id: imd_rain
+    type: public
+    mode: offline_fixture
+  - id: cwc_river
+    type: public
+    mode: offline_fixture
+  - id: traffic_feed
+    type: public
+    mode: offline_fixture
+  - id: hospital_twin
+    type: twin
+  - id: ambulance_twin
+    type: twin
+  - id: power_twin
+    type: twin
+  - id: telecom_twin
+    type: twin

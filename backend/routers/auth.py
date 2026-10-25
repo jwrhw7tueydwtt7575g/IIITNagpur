@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 
@@ -17,7 +17,6 @@ from auth_utils import (
 
 logger = logging.getLogger("citygraph.auth")
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
 from rate_limiter import limiter
 
 router = APIRouter(

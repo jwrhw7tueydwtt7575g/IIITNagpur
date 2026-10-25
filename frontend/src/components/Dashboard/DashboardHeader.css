@@ -488,6 +488,40 @@
   border-color: #fca5a5;
 }
 
+.header-demo-auth-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.demo-pill-badge {
+  padding: 6px 12px;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  background: rgba(6, 182, 212, 0.08);
+  border-radius: var(--radius-pill);
+  color: #0284c7;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.header-signin-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.header-signin-btn:hover {
+  background: var(--color-primary-hover);
+  color: #ffffff;
+}
+
 @media (max-width: 900px) {
   .header-weather, .header-clock {
     display: none;

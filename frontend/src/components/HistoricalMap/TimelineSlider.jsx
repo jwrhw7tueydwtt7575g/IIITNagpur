@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 export default function TimelineSlider({
   timeline = [],
@@ -8,7 +8,10 @@ export default function TimelineSlider({
   loading,
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const handleSelect = onSelectDate || onDateChange || (() => {});
+  const handleSelectRef = useRef(onSelectDate || onDateChange);
+  useEffect(() => {
+    handleSelectRef.current = onSelectDate || onDateChange;
+  }, [onSelectDate, onDateChange]);
 
   const currentIndex = timeline.findIndex((t) => t.date === selectedDate);
   const currentEntry = timeline[currentIndex] || timeline[0];
@@ -17,31 +20,35 @@ export default function TimelineSlider({
     let interval = null;
     if (isPlaying) {
       interval = setInterval(() => {
-        handleSelect((prevDate) => {
-          const idx = timeline.findIndex((t) => t.date === prevDate);
-          if (idx >= 0 && idx < timeline.length - 1) {
-            return timeline[idx + 1].date;
-          } else {
-            setIsPlaying(false);
-            return timeline[0].date;
-          }
-        });
+        if (handleSelectRef.current) {
+          handleSelectRef.current((prevDate) => {
+            const idx = timeline.findIndex((t) => t.date === prevDate);
+            if (idx >= 0 && idx < timeline.length - 1) {
+              return timeline[idx + 1].date;
+            } else {
+              setIsPlaying(false);
+              return timeline[0].date;
+            }
+          });
+        }
       }, 2500);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isPlaying, timeline, handleSelect]);
+  }, [isPlaying, timeline]);
 
   const handlePrev = () => {
     if (currentIndex > 0) {
-      handleSelect(timeline[currentIndex - 1].date);
+      const fn = handleSelectRef.current || onSelectDate || onDateChange;
+      if (fn) fn(timeline[currentIndex - 1].date);
     }
   };
 
   const handleNext = () => {
     if (currentIndex < timeline.length - 1) {
-      handleSelect(timeline[currentIndex + 1].date);
+      const fn = handleSelectRef.current || onSelectDate || onDateChange;
+      if (fn) fn(timeline[currentIndex + 1].date);
     }
   };
 

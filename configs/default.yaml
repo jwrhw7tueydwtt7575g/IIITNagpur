@@ -1,0 +1,34 @@
+seed: 42
+city: delhi_ncr
+horizon_hours: 72
+step_hours: 1
+
+zones:
+  - id: z_north
+    name: North Delhi
+    vulnerability: 0.7
+  - id: z_central
+    name: Central Delhi
+    vulnerability: 0.6
+  - id: z_south
+    name: South Delhi
+    vulnerability: 0.5
+  - id: z_east
+    name: East Delhi
+    vulnerability: 0.8
+  - id: z_west
+    name: West Delhi
+    vulnerability: 0.5
+
+states:
+  - NORMAL
+  - WATCH
+  - HIGH_RISK
+  - CRITICAL
+
+ingest:
+  replay_start: "2023-07-10T00:00:00Z"
+  public_feed_mode: offline_fixture
+
+output:
+  ground_truth_path: "data/ground_truth.jsonl"

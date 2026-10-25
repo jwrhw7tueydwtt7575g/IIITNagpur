@@ -1,0 +1,12 @@
+states:
+  NORMAL: {min: 0.0, max: 0.35}
+  WATCH: {min: 0.35, max: 0.60}
+  HIGH_RISK: {min: 0.60, max: 0.80}
+  CRITICAL: {min: 0.80, max: 1.0}
+city_wide_critical:
+  min_critical_zones: 2
+  min_population_fraction: 0.15
+forced_critical_rules:
+  - hospital_occupancy_gt_100
+  - zone_loses_all_hospital_road_access
+  - hospital_substation_down_gt_1h

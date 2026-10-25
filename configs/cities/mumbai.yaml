@@ -1,0 +1,282 @@
+city_id: mumbai
+name: Mumbai Held-Out Reference City
+timezone: Asia/Kolkata
+step_minutes: 15
+horizon_hours: 72
+seed: 99
+zones:
+- id: m_00
+  name: Mumbai Zone 1
+  population: 150000
+  elevation_m: 5
+  drainage_capacity: 0.25
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_01
+- id: m_01
+  name: Mumbai Zone 2
+  population: 160000
+  elevation_m: 8
+  drainage_capacity: 0.4
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_00
+- id: m_02
+  name: Mumbai Zone 3
+  population: 170000
+  elevation_m: 11
+  drainage_capacity: 0.55
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_01
+  - m_03
+- id: m_03
+  name: Mumbai Zone 4
+  population: 180000
+  elevation_m: 14
+  drainage_capacity: 0.7
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_02
+- id: m_04
+  name: Mumbai Zone 5
+  population: 190000
+  elevation_m: 17
+  drainage_capacity: 0.25
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_03
+  - m_05
+- id: m_05
+  name: Mumbai Zone 6
+  population: 200000
+  elevation_m: 5
+  drainage_capacity: 0.4
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_04
+- id: m_06
+  name: Mumbai Zone 7
+  population: 210000
+  elevation_m: 8
+  drainage_capacity: 0.55
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_05
+  - m_07
+- id: m_07
+  name: Mumbai Zone 8
+  population: 220000
+  elevation_m: 11
+  drainage_capacity: 0.7
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_06
+- id: m_08
+  name: Mumbai Zone 9
+  population: 230000
+  elevation_m: 14
+  drainage_capacity: 0.25
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_07
+  - m_09
+- id: m_09
+  name: Mumbai Zone 10
+  population: 240000
+  elevation_m: 17
+  drainage_capacity: 0.4
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_08
+- id: m_10
+  name: Mumbai Zone 11
+  population: 250000
+  elevation_m: 5
+  drainage_capacity: 0.55
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_09
+  - m_11
+- id: m_11
+  name: Mumbai Zone 12
+  population: 260000
+  elevation_m: 8
+  drainage_capacity: 0.7
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_10
+- id: m_12
+  name: Mumbai Zone 13
+  population: 270000
+  elevation_m: 11
+  drainage_capacity: 0.25
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_11
+  - m_13
+- id: m_13
+  name: Mumbai Zone 14
+  population: 280000
+  elevation_m: 14
+  drainage_capacity: 0.4
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_12
+- id: m_14
+  name: Mumbai Zone 15
+  population: 290000
+  elevation_m: 17
+  drainage_capacity: 0.55
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_13
+  - m_15
+- id: m_15
+  name: Mumbai Zone 16
+  population: 300000
+  elevation_m: 5
+  drainage_capacity: 0.7
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_14
+- id: m_16
+  name: Mumbai Zone 17
+  population: 310000
+  elevation_m: 8
+  drainage_capacity: 0.25
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_15
+  - m_17
+- id: m_17
+  name: Mumbai Zone 18
+  population: 320000
+  elevation_m: 11
+  drainage_capacity: 0.4
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_16
+- id: m_18
+  name: Mumbai Zone 19
+  population: 330000
+  elevation_m: 14
+  drainage_capacity: 0.55
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_17
+  - m_19
+- id: m_19
+  name: Mumbai Zone 20
+  population: 340000
+  elevation_m: 17
+  drainage_capacity: 0.7
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_18
+- id: m_20
+  name: Mumbai Zone 21
+  population: 350000
+  elevation_m: 5
+  drainage_capacity: 0.25
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - m_19
+  - m_21
+- id: m_21
+  name: Mumbai Zone 22
+  population: 360000
+  elevation_m: 8
+  drainage_capacity: 0.4
+  hospital_facilities: 1
+  substation_coverage: 0.5
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_20
+- id: m_22
+  name: Mumbai Zone 23
+  population: 370000
+  elevation_m: 11
+  drainage_capacity: 0.55
+  hospital_facilities: 0
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_21
+  - m_23
+- id: m_23
+  name: Mumbai Zone 24
+  population: 380000
+  elevation_m: 14
+  drainage_capacity: 0.7
+  hospital_facilities: 0
+  substation_coverage: 0.8
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - m_22

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import './SimulationView.css';
 
 export default function SimulationView({
@@ -9,6 +9,7 @@ export default function SimulationView({
   loading,
   selectedScenario,
   setSelectedScenario,
+  selectedLocation = 'delhi_ncr',
   onSelectNode,
 }) {
   const isSimulated = Boolean(simulation);
@@ -17,6 +18,63 @@ export default function SimulationView({
   const affectedNodes = simulation?.affected_nodes || graph?.affected_nodes || [];
   const highestRiskNodeId = graph?.summary?.highest_risk_node || 'node_43';
   const highestRiskNode = (graph?.nodes || []).find((n) => n.id === highestRiskNodeId);
+
+  const landmarkPresets = useMemo(() => {
+    if (selectedLocation?.includes('mumbai')) {
+      return [
+        { name: 'Kurla Mithi River Basin', type: 'flood', defaultSeverity: 85 },
+        { name: 'Dadar Western Railway Culvert', type: 'flood', defaultSeverity: 80 },
+        { name: 'Bandra-Kurla Complex (BKC)', type: 'cloudburst', defaultSeverity: 75 },
+        { name: 'Love Grove Pumping Sluice', type: 'flood', defaultSeverity: 90 },
+        { name: 'Hindmata Flyover Basin', type: 'flood', defaultSeverity: 75 },
+        { name: 'Andheri Subway', type: 'cloudburst', defaultSeverity: 85 },
+      ];
+    }
+    if (selectedLocation?.includes('kathmandu')) {
+      return [
+        { name: 'Bagmati River Balkhu Corridor', type: 'flood', defaultSeverity: 85 },
+        { name: 'Bishnumati Teku Confluence', type: 'flood', defaultSeverity: 80 },
+        { name: 'Tribhuvan Airport Airlift Staging', type: 'cloudburst', defaultSeverity: 70 },
+        { name: 'Koteshwor Highway Intersection', type: 'flood', defaultSeverity: 75 },
+      ];
+    }
+    return [
+      { name: 'Ring Road Underpass #43', type: 'flood', defaultSeverity: 85 },
+      { name: 'ITO Yamuna Floodplain', type: 'flood', defaultSeverity: 90 },
+      { name: 'Minto Bridge Subway', type: 'cloudburst', defaultSeverity: 85 },
+      { name: 'Maharani Bagh 400kV Substation', type: 'heatwave', defaultSeverity: 80 },
+      { name: 'AIIMS Emergency Trauma Corridor', type: 'compound', defaultSeverity: 75 },
+      { name: 'Kashmere Gate ISBT', type: 'dam_release', defaultSeverity: 85 },
+    ];
+  }, [selectedLocation]);
+
+  const [targetPlace, setTargetPlace] = useState(landmarkPresets[0]?.name || 'Ring Road Underpass #43');
+  const [disasterType, setDisasterType] = useState('flood');
+  const [severity, setSeverity] = useState(80);
+  const [prevLocation, setPrevLocation] = useState(selectedLocation);
+
+  if (selectedLocation !== prevLocation) {
+    setPrevLocation(selectedLocation);
+    if (landmarkPresets.length > 0) {
+      setTargetPlace(landmarkPresets[0].name);
+      setDisasterType(landmarkPresets[0].type);
+      setSeverity(landmarkPresets[0].defaultSeverity);
+    }
+  }
+
+  const handleSimulatePlace = () => {
+    if (!targetPlace.trim()) return;
+    onRunSimulation({
+      place_name: targetPlace.trim(),
+      disaster_type: disasterType,
+      severity: Number(severity),
+      city: selectedLocation,
+    });
+  };
+
+  const placeSim = simulation?.simulation?.place_name
+    ? simulation.simulation
+    : (graph?.simulation?.place_name ? graph.simulation : null);
 
   const scenarios = [
     {
@@ -152,6 +210,166 @@ export default function SimulationView({
           </div>
         ))}
       </div>
+
+      {/* Targeted Landmark Hazard Simulation Control Panel */}
+      <div className="sim-panel-card place-sim-card">
+        <div className="card-header-clean">
+          <div>
+            <h3 className="card-heading">📍 Targeted Landmark & Sector Hazard Simulation</h3>
+            <p className="place-sim-subtitle">
+              Execute precise physical hazard injections at specific urban landmarks, substations, transit hubs, or riverfront basins.
+            </p>
+          </div>
+          <span className="card-badge badge-landmark">POINT HAZARD INJECTOR</span>
+        </div>
+
+        <div className="place-sim-controls-grid">
+          {/* Target Place Input & Presets */}
+          <div className="place-input-group">
+            <label className="place-input-label" htmlFor="landmark-input">
+              Target Landmark / Infrastructure Sector:
+            </label>
+            <div className="place-input-wrapper">
+              <input
+                id="landmark-input"
+                type="text"
+                className="place-text-input"
+                value={targetPlace}
+                onChange={(e) => setTargetPlace(e.target.value)}
+                placeholder="e.g. Ring Road Underpass #43, Dadar Western Sluice, ITO Floodplain..."
+              />
+            </div>
+            <div className="place-presets-row">
+              <span className="presets-label">Quick Presets:</span>
+              <div className="preset-chips">
+                {landmarkPresets.map((preset) => (
+                  <button
+                    key={preset.name}
+                    type="button"
+                    className={`preset-chip ${targetPlace === preset.name ? 'is-active' : ''}`}
+                    onClick={() => {
+                      setTargetPlace(preset.name);
+                      setDisasterType(preset.type);
+                      setSeverity(preset.defaultSeverity);
+                    }}
+                  >
+                    {preset.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Disaster Type & Severity Slider */}
+          <div className="place-params-group">
+            <div className="param-item">
+              <label className="place-input-label" htmlFor="disaster-select">
+                Disaster Event Type:
+              </label>
+              <select
+                id="disaster-select"
+                className="place-select-input"
+                value={disasterType}
+                onChange={(e) => setDisasterType(e.target.value)}
+              >
+                <option value="flood">🌊 River Surge / Inundation Flood</option>
+                <option value="cloudburst">🌧️ Cloudburst Torrential Deluge</option>
+                <option value="dam_release">🚪 Upstream Barrage / Sluice Discharge</option>
+                <option value="heatwave">🔥 Extreme Heatwave Grid Surcharge</option>
+                <option value="compound">⚠️ Compound Hydrological Failure</option>
+              </select>
+            </div>
+
+            <div className="param-item">
+              <div className="severity-label-row">
+                <label className="place-input-label" htmlFor="severity-range">
+                  Hazard Severity Index:
+                </label>
+                <span className="severity-val-pill">{severity}%</span>
+              </div>
+              <input
+                id="severity-range"
+                type="range"
+                min="15"
+                max="100"
+                step="5"
+                value={severity}
+                onChange={(e) => setSeverity(Number(e.target.value))}
+                className="severity-slider"
+              />
+              <div className="severity-slider-ticks">
+                <span>Moderate (30%)</span>
+                <span>Critical (75%)</span>
+                <span>Max Catastrophic (100%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Button Row */}
+        <div className="place-sim-actions-row">
+          <div className="place-sim-hint">
+            Simulation will cascade topological failures across dependent roads, water treatment sumps, and substations.
+          </div>
+          <button
+            type="button"
+            className="sim-btn-primary place-execute-btn"
+            onClick={handleSimulatePlace}
+            disabled={loading || !targetPlace.trim()}
+          >
+            {loading ? 'Executing Hazard Inflow...' : `⚡ Inject Hazard at "${targetPlace || 'Target'}"`}
+          </button>
+        </div>
+      </div>
+
+      {/* Active Landmark Incident Telemetry & Directive Dossier (if targeted sim active) */}
+      {placeSim && (
+        <div className="sim-panel-card active-dossier-card">
+          <div className="card-header-clean">
+            <div>
+              <span className="dossier-top-tag">LOCALIZED HAZARD PROFILE</span>
+              <h3 className="card-heading">
+                Active Stress Incident: {placeSim.place_name || targetPlace}
+              </h3>
+            </div>
+            <span className="card-badge badge-alert">
+              {String(placeSim.disaster_type || disasterType).toUpperCase()} • SEVERITY {placeSim.severity || severity}%
+            </span>
+          </div>
+
+          {placeSim.narrative && (
+            <p className="dossier-narrative">{placeSim.narrative}</p>
+          )}
+
+          <div className="dossier-grid">
+            {/* Breached Chokepoints */}
+            <div className="dossier-col">
+              <h4 className="dossier-col-title">🚫 Breached Chokepoints & Infrastructure</h4>
+              <ul className="dossier-list">
+                {(placeSim.chokepoints_breached || ['Primary stormwater drainage sluices', 'Underpass arterial roadway', 'Auxiliary distribution transformers']).map((chk, i) => (
+                  <li key={i} className="dossier-list-item breached">
+                    <span className="item-icon">✕</span>
+                    <span>{chk}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Field Directives */}
+            <div className="dossier-col">
+              <h4 className="dossier-col-title">🛡️ Field Operational Directives</h4>
+              <ul className="dossier-list">
+                {(placeSim.actionable_directives || ['Deploy mobile dewatering pump trucks', 'Activate traffic diversions to elevated ring road', 'Isolate flood-prone 11kV feeder lines']).map((dir, i) => (
+                  <li key={i} className="dossier-list-item directive">
+                    <span className="item-icon">✓</span>
+                    <span>{dir}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Cascading Pipeline Flowchart */}
       <div className="sim-panel-card">

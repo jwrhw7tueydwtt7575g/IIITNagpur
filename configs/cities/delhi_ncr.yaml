@@ -1,0 +1,292 @@
+city_id: delhi_ncr
+name: Delhi NCR Reference City
+timezone: Asia/Kolkata
+step_minutes: 15
+horizon_hours: 72
+seed: 42
+zones:
+- id: zone_00
+  name: Zone 1
+  population: 113086
+  elevation_m: 210.0
+  drainage_capacity: 0.6
+  hospital_facilities: 3
+  substation_coverage: 0.68
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_01
+- id: zone_01
+  name: Zone 2
+  population: 284372
+  elevation_m: 218.3
+  drainage_capacity: 0.76
+  hospital_facilities: 0
+  substation_coverage: 0.82
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_00
+  - zone_02
+  - zone_03
+- id: zone_02
+  name: Zone 3
+  population: 246424
+  elevation_m: 199.4
+  drainage_capacity: 0.32
+  hospital_facilities: 0
+  substation_coverage: 0.96
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_01
+  - zone_03
+  - zone_04
+- id: zone_03
+  name: Zone 4
+  population: 356629
+  elevation_m: 208.4
+  drainage_capacity: 0.56
+  hospital_facilities: 3
+  substation_coverage: 0.73
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_02
+- id: zone_04
+  name: Zone 5
+  population: 231929
+  elevation_m: 241.5
+  drainage_capacity: 0.55
+  hospital_facilities: 0
+  substation_coverage: 0.51
+  ambulance_depots: 2
+  river_gauge: gauge_4
+  neighbors:
+  - zone_03
+  - zone_05
+- id: zone_05
+  name: Zone 6
+  population: 342563
+  elevation_m: 242.0
+  drainage_capacity: 0.55
+  hospital_facilities: 1
+  substation_coverage: 0.58
+  ambulance_depots: 2
+  river_gauge: gauge_5
+  neighbors:
+  - zone_04
+  - zone_06
+- id: zone_06
+  name: Zone 7
+  population: 388806
+  elevation_m: 238.1
+  drainage_capacity: 0.59
+  hospital_facilities: 3
+  substation_coverage: 0.65
+  ambulance_depots: 0
+  river_gauge: gauge_0
+  neighbors:
+  - zone_05
+- id: zone_07
+  name: Zone 8
+  population: 276452
+  elevation_m: 202.1
+  drainage_capacity: 0.7
+  hospital_facilities: 0
+  substation_coverage: 0.87
+  ambulance_depots: 2
+  river_gauge: gauge_1
+  neighbors:
+  - zone_06
+  - zone_08
+- id: zone_08
+  name: Zone 9
+  population: 326058
+  elevation_m: 200.0
+  drainage_capacity: 0.72
+  hospital_facilities: 3
+  substation_coverage: 0.79
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - zone_07
+  - zone_09
+- id: zone_09
+  name: Zone 10
+  population: 362914
+  elevation_m: 241.2
+  drainage_capacity: 0.63
+  hospital_facilities: 3
+  substation_coverage: 0.71
+  ambulance_depots: 2
+  river_gauge: gauge_3
+  neighbors:
+  - zone_08
+- id: zone_10
+  name: Zone 11
+  population: 367307
+  elevation_m: 226.6
+  drainage_capacity: 0.74
+  hospital_facilities: 3
+  substation_coverage: 0.87
+  ambulance_depots: 2
+  river_gauge: null
+  neighbors:
+  - zone_09
+  - zone_11
+- id: zone_11
+  name: Zone 12
+  population: 303394
+  elevation_m: 242.6
+  drainage_capacity: 0.59
+  hospital_facilities: 2
+  substation_coverage: 0.74
+  ambulance_depots: 0
+  river_gauge: gauge_5
+  neighbors:
+  - zone_10
+  - zone_12
+- id: zone_12
+  name: Zone 13
+  population: 261444
+  elevation_m: 198.1
+  drainage_capacity: 0.62
+  hospital_facilities: 2
+  substation_coverage: 0.67
+  ambulance_depots: 0
+  river_gauge: null
+  neighbors:
+  - zone_11
+  - zone_13
+- id: zone_13
+  name: Zone 14
+  population: 174782
+  elevation_m: 238.5
+  drainage_capacity: 0.78
+  hospital_facilities: 2
+  substation_coverage: 0.42
+  ambulance_depots: 2
+  river_gauge: null
+  neighbors:
+  - zone_12
+  - zone_14
+- id: zone_14
+  name: Zone 15
+  population: 87633
+  elevation_m: 233.4
+  drainage_capacity: 0.47
+  hospital_facilities: 2
+  substation_coverage: 0.47
+  ambulance_depots: 2
+  river_gauge: null
+  neighbors:
+  - zone_13
+  - zone_15
+  - zone_16
+- id: zone_15
+  name: Zone 16
+  population: 163689
+  elevation_m: 210.0
+  drainage_capacity: 0.87
+  hospital_facilities: 2
+  substation_coverage: 0.79
+  ambulance_depots: 1
+  river_gauge: gauge_3
+  neighbors:
+  - zone_14
+  - zone_16
+  - zone_17
+- id: zone_16
+  name: Zone 17
+  population: 139868
+  elevation_m: 199.1
+  drainage_capacity: 0.53
+  hospital_facilities: 3
+  substation_coverage: 0.88
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_15
+- id: zone_17
+  name: Zone 18
+  population: 189623
+  elevation_m: 243.4
+  drainage_capacity: 0.56
+  hospital_facilities: 0
+  substation_coverage: 0.54
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_16
+  - zone_18
+- id: zone_18
+  name: Zone 19
+  population: 313658
+  elevation_m: 231.1
+  drainage_capacity: 0.71
+  hospital_facilities: 1
+  substation_coverage: 0.99
+  ambulance_depots: 2
+  river_gauge: gauge_0
+  neighbors:
+  - zone_17
+  - zone_19
+- id: zone_19
+  name: Zone 20
+  population: 287040
+  elevation_m: 229.7
+  drainage_capacity: 0.78
+  hospital_facilities: 3
+  substation_coverage: 0.44
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_18
+  - zone_20
+- id: zone_20
+  name: Zone 21
+  population: 240634
+  elevation_m: 201.3
+  drainage_capacity: 0.35
+  hospital_facilities: 2
+  substation_coverage: 0.85
+  ambulance_depots: 1
+  river_gauge: gauge_2
+  neighbors:
+  - zone_19
+- id: zone_21
+  name: Zone 22
+  population: 99879
+  elevation_m: 225.8
+  drainage_capacity: 0.43
+  hospital_facilities: 3
+  substation_coverage: 0.5
+  ambulance_depots: 2
+  river_gauge: null
+  neighbors:
+  - zone_20
+  - zone_22
+- id: zone_22
+  name: Zone 23
+  population: 261891
+  elevation_m: 202.7
+  drainage_capacity: 0.64
+  hospital_facilities: 3
+  substation_coverage: 0.75
+  ambulance_depots: 1
+  river_gauge: null
+  neighbors:
+  - zone_21
+  - zone_23
+- id: zone_23
+  name: Zone 24
+  population: 284504
+  elevation_m: 211.9
+  drainage_capacity: 0.6
+  hospital_facilities: 2
+  substation_coverage: 0.77
+  ambulance_depots: 1
+  river_gauge: gauge_5
+  neighbors:
+  - zone_22

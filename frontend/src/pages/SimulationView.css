@@ -28,12 +28,13 @@
 }
 
 .page-main-title {
-  margin: 6px 0 0;
-  font-size: 22px;
-  font-weight: 800;
+  margin: 5px 0 0;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.4px;
+  letter-spacing: -0.3px;
 }
+
 
 .page-sub-title {
   margin: 4px 0 0;
@@ -428,3 +429,289 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   Targeted Landmark Hazard Simulation & Active Dossier
+   ========================================================================== */
+.place-sim-card {
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+.place-sim-subtitle {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.badge-landmark {
+  background: #EEF2FF;
+  color: #4F46E5;
+  border: 1px solid #C7D2FE;
+  font-weight: 700;
+  font-size: 10.5px;
+  letter-spacing: 0.5px;
+}
+
+.place-sim-controls-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #F1F5F9;
+}
+
+@media (max-width: 900px) {
+  .place-sim-controls-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.place-input-group,
+.place-params-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.place-input-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.place-text-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: #F8FAFC;
+  transition: all 0.15s ease;
+  box-sizing: border-box;
+}
+
+.place-text-input:focus {
+  outline: none;
+  border-color: #2563EB;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.place-presets-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.presets-label {
+  font-size: 11px;
+  color: var(--text-muted, #94A3B8);
+  font-weight: 600;
+}
+
+.preset-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset-chip {
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #334155;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-chip:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.preset-chip.is-active {
+  background: #EFF6FF;
+  border-color: #3B82F6;
+  color: #1D4ED8;
+  font-weight: 700;
+}
+
+.place-select-input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: #FFFFFF;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.place-select-input:focus {
+  outline: none;
+  border-color: #2563EB;
+}
+
+.severity-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.severity-val-pill {
+  font-size: 12px;
+  font-weight: 800;
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.severity-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #E2E8F0;
+  outline: none;
+  accent-color: #DC2626;
+  cursor: pointer;
+}
+
+.severity-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #94A3B8;
+  margin-top: 4px;
+}
+
+.place-sim-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #F1F5F9;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.place-sim-hint {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  max-width: 500px;
+}
+
+.place-execute-btn {
+  background: #DC2626;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+  font-size: 13.5px;
+  padding: 10px 20px;
+}
+
+.place-execute-btn:hover:not(:disabled) {
+  background: #B91C1C;
+}
+
+/* Active Landmark Incident Dossier Card */
+.active-dossier-card {
+  border-left: 4px solid #DC2626;
+  background: #FFFBFB;
+}
+
+.dossier-top-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #DC2626;
+  text-transform: uppercase;
+}
+
+.dossier-narrative {
+  margin: 10px 0 16px;
+  padding: 10px 14px;
+  background: #FFFFFF;
+  border-radius: 6px;
+  border: 1px solid #FEE2E2;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #334155;
+  font-style: italic;
+}
+
+.dossier-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .dossier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dossier-col {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+
+.dossier-col-title {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #1E293B;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.dossier-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dossier-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: #334155;
+}
+
+.dossier-list-item.breached .item-icon {
+  color: #DC2626;
+  font-weight: 800;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.dossier-list-item.directive .item-icon {
+  color: #16A34A;
+  font-weight: 800;
+  font-size: 11px;
+  margin-top: 1px;
+}
+

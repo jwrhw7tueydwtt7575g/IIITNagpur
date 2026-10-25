@@ -1,0 +1,19 @@
+scenario_id: cloudburst
+seed_offset: 0
+duration_hours: 72
+step_minutes: 15
+rainfall_pattern: cloudburst
+river_pattern: cloudburst
+heatwave: false
+disease_outbreak: false
+dam_release: false
+cloudburst: true
+concept_drifts:
+  - at_hour: 24
+    type: pump_degradation
+  - at_hour: 36
+    type: new_road_link
+  - at_hour: 48
+    type: substation_reroute
+  - at_hour: 60
+    type: population_shift

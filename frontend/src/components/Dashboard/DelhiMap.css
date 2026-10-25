@@ -668,8 +668,8 @@
   height: 7px;
   border-radius: 50%;
   background: var(--status-green);
-  box-shadow: 0 0 6px var(--status-green);
 }
+
 
 /* Floating Cards Base */
 .map-floating-card {
@@ -1052,8 +1052,8 @@
 
 .live-traffic-switch-pill.is-active .traffic-dot {
   background: #10b981;
-  box-shadow: 0 0 6px #10b981;
 }
+
 
 .traffic-label {
   font-size: 11.5px;
@@ -1176,10 +1176,11 @@
 
 .map-flood-depth-badge.depth-severe {
   background: rgba(2, 132, 199, 0.94);
-  border-color: #38bdf8;
+  border-color: #0284c7;
   color: #ffffff;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
+
 
 .depth-wave-icon {
   font-size: 10px;

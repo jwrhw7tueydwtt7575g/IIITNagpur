@@ -1,0 +1,8 @@
+{
+  "adapter_id": "open_meteo_weather",
+  "fetch_time": 1792938588,
+  "payload": {
+    "raw": "{\"hourly\": {\"time\": [\"2024-01-01T00:00\"], \"precipitation\": [3.2]}}",
+    "live": true
+  }
+}

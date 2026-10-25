@@ -14,12 +14,28 @@ import './KpiCards.css';
 export default function KpiCards({
   graph,
   simulation,
-  onSelectNode,
+  onSelectNode = null,
 }) {
   const total = graph?.summary?.total_nodes ?? (graph?.nodes?.length || 108);
   const operational = (graph?.nodes || []).filter((n) => n.status === 'safe').length || (simulation ? 77 : 100);
   const failed = graph?.summary?.failed_nodes ?? (graph?.failed_nodes?.length || (simulation ? 8 : 0));
   const affected = graph?.summary?.affected_nodes ?? (graph?.affected_nodes?.length || (simulation ? 23 : 0));
+
+  const handleSelectFirstFailed = () => {
+    if (!onSelectNode) return;
+    const failedList = (graph?.nodes || []).filter((n) => n.status === 'failed');
+    if (failedList.length > 0) {
+      onSelectNode(failedList[0]);
+    }
+  };
+
+  const handleSelectFirstAffected = () => {
+    if (!onSelectNode) return;
+    const affectedList = (graph?.nodes || []).filter((n) => n.status === 'affected');
+    if (affectedList.length > 0) {
+      onSelectNode(affectedList[0]);
+    }
+  };
 
   const operationalPct = total > 0 ? Math.round((operational / total) * 100) : 76;
   const failedPct = total > 0 ? Math.round((failed / total) * 100) : 7;
@@ -106,7 +122,12 @@ export default function KpiCards({
         </div>
 
         {/* 3. Critical Failures */}
-        <div className={`kpi-card ${failed > 0 ? 'is-alert-red' : ''}`}>
+        <div
+          className={`kpi-card ${failed > 0 ? 'is-alert-red' : ''}`}
+          onClick={failed > 0 ? handleSelectFirstFailed : undefined}
+          style={failed > 0 ? { cursor: 'pointer' } : undefined}
+          title={failed > 0 ? 'Click to inspect flooded asset on map' : undefined}
+        >
           <div className="kpi-card-top">
             <div className="kpi-icon-wrap icon-red">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -141,7 +162,12 @@ export default function KpiCards({
         </div>
 
         {/* 4. Secondary Impacts */}
-        <div className={`kpi-card ${affected > 0 ? 'is-alert-amber' : ''}`}>
+        <div
+          className={`kpi-card ${affected > 0 ? 'is-alert-amber' : ''}`}
+          onClick={affected > 0 ? handleSelectFirstAffected : undefined}
+          style={affected > 0 ? { cursor: 'pointer' } : undefined}
+          title={affected > 0 ? 'Click to inspect affected asset on map' : undefined}
+        >
           <div className="kpi-card-top">
             <div className="kpi-icon-wrap icon-orange">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">

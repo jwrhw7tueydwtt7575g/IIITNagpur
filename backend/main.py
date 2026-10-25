@@ -1,10 +1,16 @@
 import os
 import logging
 from typing import Dict, List, Optional
+from contextlib import asynccontextmanager
 import random
+from dotenv import load_dotenv
+
+load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 import networkx as nx
-from fastapi import FastAPI, Depends, Request, HTTPException, status
+from fastapi import FastAPI, Depends, Request, HTTPException, status, Query
+
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -15,6 +21,7 @@ from auth_utils import get_current_user
 from routers.auth import router as auth_router, seed_default_user
 from routers.historical import router as historical_router
 from routers.nepal import router as nepal_router
+from routers.warning import router as warning_router
 from rate_limiter import limiter
 
 logger = logging.getLogger("citygraph.api")
@@ -23,6 +30,20 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(na
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
 ENABLE_DOCS = os.getenv("ENABLE_DOCS", "true").lower() == "true"
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
+    try:
+        seed_default_user(db)
+    finally:
+        db.close()
+    create_city_graph()
+    reset_simulation_state()
+    yield
+
+
 app = FastAPI(
     title="CityGraph API",
     description="Predictive cascading failure simulation for smart cities",
@@ -30,6 +51,7 @@ app = FastAPI(
     docs_url="/docs" if ENABLE_DOCS else None,
     redoc_url="/redoc" if ENABLE_DOCS else None,
     openapi_url="/openapi.json" if ENABLE_DOCS else None,
+    lifespan=lifespan,
 )
 
 # Production CORS configuration
@@ -90,6 +112,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 app.include_router(auth_router)
 app.include_router(historical_router)
 app.include_router(nepal_router)
+app.include_router(warning_router)
 
 
 class RainRequest(BaseModel):
@@ -993,9 +1016,12 @@ def get_complete_graph_response() -> dict:
             }
         )
 
-    highest_node_id = max(
-        node_data,
-        key=lambda node_id: node_data[node_id]["risk"],
+    if not node_data:
+        create_city_graph()
+
+    highest_node_id = (
+        max(node_data, key=lambda node_id: node_data[node_id].get("risk", 0))
+        if node_data else "node_43"
     )
 
     return {
@@ -1018,16 +1044,7 @@ def get_complete_graph_response() -> dict:
     }
 
 
-@app.on_event("startup")
-def startup_event():
-    Base.metadata.create_all(bind=engine)
-    db = SessionLocal()
-    try:
-        seed_default_user(db)
-    finally:
-        db.close()
-    create_city_graph()
-    reset_simulation_state()
+
 
 
 @app.get("/")
@@ -1076,6 +1093,233 @@ def reset(
     limiter.check_rate_limit(request, endpoint_key="reset_simulation", max_requests=15, window_seconds=60)
     reset_simulation_state()
     return get_complete_graph_response()
+
+
+class PlaceDisasterRequest(BaseModel):
+    place_name: str = Field(default="Ring Road Underpass #43", description="Landmark or urban location")
+    disaster_type: str = Field(default="flood", description="Disaster event type")
+    severity: int = Field(default=75, ge=1, le=100, description="Severity percentage from 1 to 100")
+    city: Optional[str] = Field(default="delhi_ncr", description="City identifier")
+
+
+@app.post("/api/simulate/place")
+@app.post("/simulate/place")
+def simulate_place_disaster_endpoint(
+    request_body: PlaceDisasterRequest,
+    request: Request,
+):
+    """Simulate hyper-local disaster event for a specific place/landmark with resilient AI/dataset fallback."""
+    limiter.check_rate_limit(request, endpoint_key="simulate_place", max_requests=25, window_seconds=60)
+    from adapters.ai_fallback import AI_FALLBACK
+
+    if not node_data:
+        create_city_graph()
+
+    result = AI_FALLBACK.synthesize_place_disaster(
+        place_name=request_body.place_name,
+        disaster_type=request_body.disaster_type,
+        severity=request_body.severity,
+        city_id=request_body.city or "delhi_ncr",
+    )
+
+    reset_simulation_state()
+    simulation_state["active"] = True
+    simulation_state["scenario"] = f"place_{request_body.disaster_type}"
+    simulation_state["target_place"] = result.get("place_name", request_body.place_name)
+
+    # Apply synthesized node failures
+    p_node = result.get("primary_node", {})
+    p_id = p_node.get("id")
+    if not p_id or p_id not in node_data:
+        p_id = "node_43" if "node_43" in node_data else (list(node_data.keys())[0] if node_data else "node_43")
+        p_node["id"] = p_id
+    failed_ids = []
+    affected_ids = []
+
+    if p_id and p_id in node_data:
+
+        raw_status = p_node.get("status", "failed")
+        status = "failed" if raw_status in ["failed", "critical", "offline", "breached"] or request_body.severity >= 70 else raw_status
+        node_data[p_id]["status"] = status
+        node_data[p_id]["current_load"] = p_node.get("current_load", 95)
+        node_data[p_id]["load"] = round(p_node.get("current_load", 95) / 100.0, 2)
+        node_data[p_id]["risk"] = p_node.get("risk_score", 0.95)
+        node_data[p_id]["risk_score"] = p_node.get("risk_score", 0.95)
+        node_data[p_id]["failure_reason"] = p_node.get(
+            "failure_reason", f"{request_body.disaster_type.capitalize()} exceedance active."
+        )
+        if status == "failed":
+            failed_ids.append(p_id)
+        else:
+            affected_ids.append(p_id)
+
+
+    for s_node in result.get("secondary_nodes", []):
+        s_id = s_node.get("id")
+        if s_id and s_id in node_data and s_id != p_id:
+            s_status = s_node.get("status", "affected")
+            node_data[s_id]["status"] = s_status
+            node_data[s_id]["risk"] = s_node.get("risk_score", 0.65)
+            node_data[s_id]["risk_score"] = s_node.get("risk_score", 0.65)
+            node_data[s_id]["failure_reason"] = s_node.get(
+                "reason", "Secondary cascading load spillover."
+            )
+            if s_status == "failed":
+                failed_ids.append(s_id)
+            else:
+                affected_ids.append(s_id)
+
+    simulation_state["failed_nodes"] = failed_ids
+    simulation_state["affected_nodes"] = affected_ids
+
+    response = get_complete_graph_response()
+    response["failed_nodes"] = failed_ids
+    response["affected_nodes"] = affected_ids
+    response["summary"] = {
+        "total_nodes": len(node_data),
+        "failed_count": len(failed_ids),
+        "affected_count": len(affected_ids),
+        "healthy_count": len(node_data) - len(failed_ids) - len(affected_ids),
+        "average_network_risk": round(sum(n.get("risk", 0) for n in node_data.values()) / max(len(node_data), 1), 2),
+        "highest_risk_node": p_id or "node_43",
+    }
+    response["simulation"] = {
+        "active": True,
+        "scenario": f"place_{request_body.disaster_type}",
+        "place_name": result.get("place_name", request_body.place_name),
+        "disaster_type": request_body.disaster_type,
+        "severity": request_body.severity,
+        "rainfall_mm_hr": result.get("rainfall_mm_hr", 85.0),
+        "water_depth_m": result.get("water_depth_m", 1.2),
+        "failed_nodes": failed_ids,
+        "affected_nodes": affected_ids,
+        "chokepoints_breached": result.get("chokepoints_breached", [f"{result.get('place_name', request_body.place_name)} drainage sluice"]),
+        "actionable_directives": [
+            d.get("action") if isinstance(d, dict) else str(d)
+            for d in result.get("directives", result.get("actionable_directives", []))
+        ],
+        "timeline": result.get("timeline", []),
+        "directives": result.get("directives", []),
+    }
+    return response
+
+
+# -----------------------------------------------------------------------------
+# Situation Report (SitRep) Intelligence Endpoints
+# -----------------------------------------------------------------------------
+@app.get("/api/reports/cases")
+@app.get("/reports/cases")
+def list_sitrep_cases():
+    """List all pre-computed and verified executive situation report cases."""
+    from adapters.disaster_db import DISASTER_DB
+    return {"cases": DISASTER_DB.list_report_cases()}
+
+
+@app.get("/api/reports/case/{case_id}")
+@app.get("/reports/case/{case_id}")
+def get_sitrep_case_endpoint(case_id: str):
+    """Retrieve complete, verified Executive SitRep dossier for a specific scenario case."""
+    from adapters.disaster_db import DISASTER_DB
+    dossier = DISASTER_DB.get_sitrep_case(case_id)
+    if not dossier:
+        raise HTTPException(status_code=404, detail=f"SitRep case '{case_id}' not found.")
+    return dossier
+
+
+class SitRepGenerateRequest(BaseModel):
+    place_name: str = Field(default="Ring Road Underpass #43")
+    disaster_type: str = Field(default="flood")
+    severity: int = Field(default=80, ge=1, le=100)
+    city: Optional[str] = Field(default="delhi_ncr")
+
+
+@app.post("/api/reports/generate")
+@app.post("/reports/generate")
+def generate_custom_sitrep(req: SitRepGenerateRequest, request: Request):
+    """Generate dynamic defense-grade SitRep using OpenAI synthesis with local DB failover."""
+    limiter.check_rate_limit(request, endpoint_key="generate_sitrep", max_requests=20, window_seconds=60)
+    from adapters.ai_fallback import AI_FALLBACK
+    from adapters.disaster_db import DISASTER_DB
+
+    sim = AI_FALLBACK.synthesize_place_disaster(
+        place_name=req.place_name,
+        disaster_type=req.disaster_type,
+        severity=req.severity,
+        city_id=req.city or "delhi_ncr",
+    )
+
+    city = DISASTER_DB.get_city(req.city or "delhi_ncr")
+    p_node = sim.get("primary_node", {})
+    failed_ids = sim.get("failed_nodes") or ([p_node.get("id")] if p_node.get("status") in ["failed", "critical"] else [])
+    affected_ids = sim.get("affected_nodes") or [s.get("id") for s in sim.get("secondary_nodes", [])]
+    total_assets = city.get("monitored_assets_count", len(node_data) if node_data else 108)
+
+    directives = [
+        {
+            "priority": d.get("priority", idx + 1) if isinstance(d, dict) else idx + 1,
+            "agency": "Municipal Disaster Operations",
+            "action": d.get("action") if isinstance(d, dict) else str(d),
+            "location": d.get("location", req.place_name) if isinstance(d, dict) else req.place_name,
+            "status": "DISPATCHED" if idx == 0 else "EN ROUTE",
+        }
+        for idx, d in enumerate(sim.get("directives", []))
+    ]
+
+    return {
+        "case_id": f"custom_{req.disaster_type}",
+        "doc_id": f"SITREP-DYN-2026-{abs(hash(req.place_name)) % 100000:05d}",
+        "classification": "OFFICIAL SITREP • EXERCISE CONFIDENTIAL",
+        "title": f"Executive Situation Report: {req.place_name} {req.disaster_type.capitalize()} Hazard",
+        "city_id": req.city or "delhi_ncr",
+        "city_name": city.get("city_name", "Metropolitan Area"),
+        "scenario_name": f"{req.place_name} {req.disaster_type.capitalize()} Surcharge",
+        "threat_level": "CRITICAL CASCADE" if req.severity >= 70 else "HIGH RISK / WATCH",
+        "executive_summary": (
+            f"Hyper-local incident dossier for {req.place_name} ({city.get('city_name')}). "
+            f"Simulated {req.disaster_type} at {req.severity}% severity caused critical breach of primary asset "
+            f"'{p_node.get('name', req.place_name)}' and cascade spillovers to {len(affected_ids)} adjacent sectors. "
+            f"Dewatering, traffic diversions, and emergency medical corridors mobilized."
+        ),
+        "posture": {
+            "normal_pct": max(5, 40 - int(req.severity * 0.35)),
+            "watch_pct": 25,
+            "high_risk_pct": 35,
+            "critical_pct": min(70, int(req.severity * 0.65)),
+            "t_crit_hours": f"{max(1.0, round(12.0 - req.severity * 0.1, 1))}h",
+            "confidence": 0.94,
+        },
+        "metrics": {
+            "monitored_assets": total_assets,
+            "operational_assets": max(0, total_assets - len(failed_ids) - len(affected_ids)),
+            "critical_failures": len(failed_ids),
+            "secondary_cascades": len(affected_ids),
+            "mean_inundation_m": sim.get("water_depth_m", 1.45),
+            "cascade_velocity_km_h": round(16.5 * (req.severity / 100.0) + 2.0, 1),
+            "model_confidence": 0.94,
+        },
+        "critical_breaches": [
+            {
+                "asset_id": p_node.get("id", "node_43"),
+                "name": p_node.get("name", req.place_name),
+                "sector": p_node.get("sector", "transit"),
+                "zone": p_node.get("zone", "Incident Epicenter"),
+                "water_depth": f"{sim.get('water_depth_m', 1.45)}m",
+                "status": "FAILED",
+                "failure_mechanism": p_node.get("failure_reason", "Exceeded design tolerance."),
+            }
+        ],
+        "cascade_timeline": sim.get("timeline", []),
+        "evacuation_telemetry": {
+            "origin": req.place_name,
+            "destination": "Regional Safe-Haven Trauma Center",
+            "distance_km": round(12.4 + (req.severity / 20.0), 1),
+            "transit_time_min": int(22 + (req.severity / 4.0)),
+            "hazards_avoided": len(failed_ids) + len(affected_ids),
+            "waypoints": [req.place_name, "Elevated Bypass", "Regional Trauma Staging"],
+        },
+        "incident_directives": directives,
+        "provenance": sim.get("provenance", "curated_disaster_knowledge_base"),
+    }
 
 
 class RouteRequest(BaseModel):
@@ -1246,7 +1490,53 @@ def calculate_emergency_route(
     }
 
 
+# ==============================================================================
+# ESP32 Edge Sensor Telemetry & Prophet Prediction Endpoints
+# ==============================================================================
+
+
+class SensorSimulateRequest(BaseModel):
+    scenario: str = Field(default="nominal", description="nominal | water_surge | gas_leak | heatwave")
+
+
+@app.get("/api/sensors/telemetry")
+@app.get("/sensors/telemetry")
+def get_sensor_telemetry_endpoint(points: int = Query(default=60, ge=10, le=360)):
+    """Retrieve real-time ESP32 edge telemetry and history window."""
+    try:
+        from sensor_engine import SENSOR_ENGINE
+    except ImportError:
+        from backend.sensor_engine import SENSOR_ENGINE
+    return SENSOR_ENGINE.get_latest_telemetry(history_points=points)
+
+
+@app.get("/api/sensors/forecast")
+@app.get("/sensors/forecast")
+def get_sensor_prophet_forecast_endpoint(horizon: int = Query(default=30, ge=5, le=120)):
+    """Run Prophet time-series forecasting model on sensor telemetry."""
+    try:
+        from sensor_engine import SENSOR_ENGINE
+    except ImportError:
+        from backend.sensor_engine import SENSOR_ENGINE
+    return SENSOR_ENGINE.generate_prophet_forecast(horizon_minutes=horizon)
+
+
+@app.post("/api/sensors/simulate")
+@app.post("/sensors/simulate")
+def simulate_sensor_scenario_endpoint(payload: SensorSimulateRequest):
+    """Switch active simulation scenario for sensor engine."""
+    try:
+        from sensor_engine import SENSOR_ENGINE
+    except ImportError:
+        from backend.sensor_engine import SENSOR_ENGINE
+    try:
+        return SENSOR_ENGINE.set_scenario(payload.scenario)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 if __name__ == "__main__":
+
     import uvicorn
 
     port = int(os.getenv("PORT", "8000"))

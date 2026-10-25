@@ -1,0 +1,90 @@
+{
+  "city_id": "bengaluru_tech_corridor",
+  "city_name": "Bengaluru Metropolitan Tech Corridor",
+  "coordinates": { "lat": 12.9716, "lon": 77.5946 },
+  "elevation_range_m": [880, 940],
+  "monitored_assets_count": 88,
+  "primary_river": "Dakshina Pinakini Basin & Interconnected Lake Chains",
+  "zones": [
+    { "id": "b_01", "name": "Outer Ring Road (ORR) Tech Spine", "vulnerability": 0.85, "drainage_capacity": 0.30 },
+    { "id": "b_02", "name": "Bellandur & Varthur Lake Catchment", "vulnerability": 0.92, "drainage_capacity": 0.22 },
+    { "id": "b_03", "name": "Whitefield IT Park Sub-Basin", "vulnerability": 0.68, "drainage_capacity": 0.45 },
+    { "id": "b_04", "name": "Electronic City Elevated Expressway Axis", "vulnerability": 0.42, "drainage_capacity": 0.65 },
+    { "id": "b_05", "name": "Hebbal Flyover & North Corridor", "vulnerability": 0.60, "drainage_capacity": 0.50 }
+  ],
+  "critical_landmarks": [
+    {
+      "name": "Bellandur Lake Spillway & Outflow Sump",
+      "aliases": ["bellandur lake", "bellandur spillway", "bellandur", "b_02"],
+      "associated_node_id": "b_02",
+      "sector": "drainage",
+      "zone": "Bellandur & Varthur Lake Catchment",
+      "base_elevation_m": 885.0,
+      "submergence_threshold_mm": 60.0,
+      "failure_mechanism": "Inter-lake stormwater stormwater culvert choked with foam and silt; reverse inundation across EcoSpace tech park."
+    },
+    {
+      "name": "Outer Ring Road Silk Board Junction",
+      "aliases": ["silk board", "central silk board", "orr junction", "b_01"],
+      "associated_node_id": "b_01",
+      "sector": "transit",
+      "zone": "Outer Ring Road (ORR) Tech Spine",
+      "base_elevation_m": 888.5,
+      "submergence_threshold_mm": 55.0,
+      "failure_mechanism": "Macro-drain backflow inundates junction under 1.4m standing water; IT corridor transit stalled."
+    },
+    {
+      "name": "Mahadevapura 220kV Substation",
+      "aliases": ["mahadevapura substation", "orr power substation", "b_03"],
+      "associated_node_id": "b_03",
+      "sector": "power",
+      "zone": "Whitefield IT Park Sub-Basin",
+      "base_elevation_m": 892.0,
+      "submergence_threshold_mm": 80.0,
+      "failure_mechanism": "Basement switchgear flooded; automatic breaker trips cut power to cloud data centers."
+    },
+    {
+      "name": "Manipal Emergency Trauma Hub",
+      "aliases": ["manipal hospital", "old airport road trauma", "b_04"],
+      "associated_node_id": "b_04",
+      "sector": "hospital",
+      "zone": "Electronic City Elevated Expressway Axis",
+      "base_elevation_m": 915.0,
+      "submergence_threshold_mm": 110.0,
+      "failure_mechanism": "Corridor clear on elevated terrain; critical Level-1 triage and emergency reception operative."
+    }
+  ],
+  "scenarios": {
+    "cloudburst": {
+      "scenario_id": "cloudburst",
+      "title": "Severe Urban Cloudburst & Cascade Lake Breach",
+      "peak_rainfall_mm_hr": 105.0,
+      "average_city_risk": 0.742,
+      "threat_status": "CRITICAL",
+      "hospital_load_factor": 0.82,
+      "grid_stress_factor": 0.76,
+      "traffic_congestion_index": 0.96,
+      "primary_failed_nodes": ["b_01", "b_02"],
+      "primary_affected_nodes": ["b_03"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+2h", "stage": "Torrential Downpour", "desc": "105 mm/hr localized cloudburst over Koramangala-Challaghatta valley." },
+        { "t": "T+4h to T+8h", "stage": "Lake Cascade Surge", "desc": "Upstream Madivala and Agara lakes breach spillways; Bellandur lake outfalls surcharge." },
+        { "t": "T+12h to T+24h", "stage": "Outer Ring Road Flooding", "desc": "EcoSpace, RMZ Ecoworld, and Marathahalli tech zones submerged; boat rescues initiated." },
+        { "t": "T+30h to T+48h", "stage": "Substation Failure & Power Load Shedding", "desc": "Mahadevapura substation tripped; standby generators run out of diesel fuel." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Deploy State Disaster Response Force (SDRF) Inflatable Rafts", "location": "EcoSpace Bellandur & Rainbow Drive", "details": "Evacuate 3,500 stranded tech workforce and residents." },
+        { "priority": 2, "action": "Breach Emergency Lake Outfall Sluices", "location": "Varthur Lake Waste Weir", "details": "Excavate emergency bypass channels to relieve upstream Bellandur lake pressure." },
+        { "priority": 3, "action": "Mandate Remote Work Directive for Tech Corridor", "location": "Outer Ring Road IT Parks", "details": "Issue disaster advisory halting 850,000 daily commuter trips on NH-44 and ORR." }
+      ],
+      "evacuation_corridor": {
+        "origin": "Bellandur EcoSpace (b_02)",
+        "destination": "Manipal Old Airport Road Trauma (b_04)",
+        "safe_distance_km": 11.8,
+        "transit_time_min": 24,
+        "hazards_avoided": 3,
+        "waypoints": ["b_02 (Bellandur)", "b_01 (Silk Board Elevated)", "b_04 (Manipal Hub)"]
+      }
+    }
+  }
+}

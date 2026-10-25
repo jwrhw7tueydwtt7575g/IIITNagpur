@@ -21,7 +21,33 @@ export default function Sidebar({
       tooltip: 'Master GIS command center & real-time monitoring',
     },
     {
+      id: 'warning_72h',
+      label: '72h Warning',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="12 6 12 12 14 14" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+        </svg>
+      ),
+      tooltip: '72-Hour predictive cascade intelligence, 4-state risk & counterfactual interventions',
+    },
+    {
+      id: 'sensor_telemetry',
+      label: 'Edge Sensors',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 11a9 9 0 0 1 9 9" />
+          <path d="M4 4a16 16 0 0 1 16 16" />
+          <circle cx="5" cy="19" r="1" />
+        </svg>
+      ),
+      tooltip: 'Real-time ESP32 edge telemetry (MQ-135 Gas, DHT Temp/Humidity, IR Water) & Prophet forecast',
+    },
+    {
       id: 'simulation',
+
       label: 'Simulation',
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

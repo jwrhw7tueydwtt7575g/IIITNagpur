@@ -29,13 +29,13 @@
 }
 
 .pulse-alert-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #EF4444;
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
-  animation: alert-pulse 1.8s infinite ease-in-out;
+  background: var(--status-red, #dc2626);
+  animation: alert-pulse 2s infinite ease-in-out;
 }
+
 
 @keyframes alert-pulse {
   0%, 100% { opacity: 1; transform: scale(1); }

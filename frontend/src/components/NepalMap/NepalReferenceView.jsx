@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './NepalReferenceView.css';
-import { useAuth } from '../../context/AuthContext.jsx';
+import { useAuth } from '../../context/useAuth.js';
 
 export default function NepalReferenceView({ apiBaseUrl }) {
   const { fetchWithAuth } = useAuth();

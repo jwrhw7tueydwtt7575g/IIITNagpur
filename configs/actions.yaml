@@ -1,0 +1,47 @@
+actions:
+  - id: mobile_pumps
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 15
+    effect_on_transition: 0.15
+  - id: generator_sets
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 30
+    effect_on_transition: 0.10
+  - id: ambulances
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 10
+    effect_on_transition: 0.08
+  - id: road_closures
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 5
+    effect_on_transition: 0.07
+  - id: targeted_evacuation
+    cost: 2
+    resource_units: 2
+    deployment_lead_time_min: 60
+    effect_on_transition: 0.12
+  - id: hospital_surge_beds
+    cost: 2
+    resource_units: 1
+    deployment_lead_time_min: 45
+    effect_on_transition: 0.10
+  - id: inter_hospital_transfers
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 20
+    effect_on_transition: 0.09
+  - id: grid_load_shedding
+    cost: 1
+    resource_units: 1
+    deployment_lead_time_min: 5
+    effect_on_transition: 0.08
+  - id: sandbagging
+    cost: 1
+    resource_units: 2
+    deployment_lead_time_min: 30
+    effect_on_transition: 0.06
+budget_default: 5

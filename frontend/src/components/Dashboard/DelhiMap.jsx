@@ -27,9 +27,20 @@ const TILE_LAYERS = {
     maxZoom: 19,
   },
   satellite: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: '&copy; Esri, Maxar, Earthstar Geographics',
-    maxZoom: 17,
+    url: import.meta.env.VITE_MAPBOX_TOKEN
+      ? `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
+      : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: import.meta.env.VITE_MAPBOX_TOKEN ? '&copy; Mapbox &copy; Maxar' : '&copy; Esri, Maxar',
+    maxZoom: 19,
+    tileSize: import.meta.env.VITE_MAPBOX_TOKEN ? 512 : 256,
+    zoomOffset: import.meta.env.VITE_MAPBOX_TOKEN ? -1 : 0,
+  },
+  mapbox: {
+    url: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN || ''}`,
+    attribution: '&copy; Mapbox &copy; OpenStreetMap',
+    maxZoom: 19,
+    tileSize: 512,
+    zoomOffset: -1,
   },
 };
 
@@ -230,7 +241,6 @@ const DELHI_TRAFFIC_CORRIDORS = [
 
 export default function DelhiMap({
   nodes = [],
-  edges = [],
   selectedNode = null,
   onSelectNode = () => {},
   mapStyle = 'streets',
@@ -261,12 +271,6 @@ export default function DelhiMap({
   onViewRouteOnMap = () => {},
   routingLoading = false,
   simulation = null,
-  // Floating Scenario simulation triggers
-  onRunSimulation = () => {},
-  onResetNetwork = () => {},
-  loadingSimulation = false,
-  selectedScenario = 'heavy_rain',
-  setSelectedScenario = () => {},
 }) {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -280,9 +284,11 @@ export default function DelhiMap({
   const routeMarkersRef = useRef(null);
   const markersLayerRef = useRef(null);
   const geoLabelsLayerRef = useRef(null);
+  const mapStyleRef = useRef(mapStyle);
+  useEffect(() => {
+    mapStyleRef.current = mapStyle;
+  }, [mapStyle]);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentZoom, setCurrentZoom] = useState(DEFAULT_ZOOM);
 
@@ -397,15 +403,6 @@ export default function DelhiMap({
     });
   }, [nodes, layerFilters, typeFilter, statusFilter, riskFilter, currentZoom, selectedNode, routeOrigin, routeDestination]);
 
-  // Autocomplete search filtering
-  const searchResults = useMemo(() => {
-    if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase().trim();
-    return nodes
-      .filter((n) => (n.name && n.name.toLowerCase().includes(q)) || (n.id && n.id.toLowerCase().includes(q)))
-      .slice(0, 6);
-  }, [nodes, searchQuery]);
-
   // Initialize Leaflet Map with STRICT Leaflet Panes for Layer Order:
   // 1. basemap (tilePane, z=200)
   // 2. water/flood polygons (floodPane, z=350)
@@ -448,7 +445,7 @@ export default function DelhiMap({
     const navPinPane = map.createPane('navPinPane');
     navPinPane.style.zIndex = '600';
 
-    const initialTileConf = TILE_LAYERS[mapStyle] || TILE_LAYERS.streets;
+    const initialTileConf = TILE_LAYERS[mapStyleRef.current] || TILE_LAYERS.streets;
     const tileLayer = L.tileLayer(initialTileConf.url, {
       subdomains: initialTileConf.subdomains || 'abc',
       attribution: initialTileConf.attribution,

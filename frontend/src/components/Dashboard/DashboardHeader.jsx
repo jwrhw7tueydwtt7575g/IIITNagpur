@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import './DashboardHeader.css';
 
 export default function DashboardHeader({
@@ -6,17 +7,17 @@ export default function DashboardHeader({
   onRetryConnection,
   onSearchSelect,
   nodes = [],
-  user,
+  user = null,
   onLogout,
   selectedLocation,
   setSelectedLocation,
 }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [timeString, setTimeString] = useState('');
   const searchInputRef = useRef(null);
+  const profileRef = useRef(null);
 
   // Live formatted clock matching reference screenshot
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function DashboardHeader({
     return () => clearInterval(interval);
   }, []);
 
-  // Global Ctrl+K / Cmd+K listener
+  // Global Ctrl+K / Cmd+K listener and click outside to close menus
   useEffect(() => {
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
@@ -48,22 +49,28 @@ export default function DashboardHeader({
         setSearchOpen(true);
       } else if (e.key === 'Escape') {
         setSearchOpen(false);
+        setProfileOpen(false);
         searchInputRef.current?.blur();
       }
     };
+    const handleClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
-  // Search filter across ID, name, short_name, type, zone, cluster
-  useEffect(() => {
-    if (!searchTerm.trim()) {
-      setSearchResults([]);
-      setSearchOpen(false);
-      return;
-    }
+  // Derived search filter across ID, name, short_name, type, zone, cluster (no setState in effect)
+  const searchResults = useMemo(() => {
+    if (!searchTerm.trim()) return [];
     const q = searchTerm.toLowerCase();
-    const matches = nodes.filter(
+    return nodes.filter(
       (n) =>
         (n.name && n.name.toLowerCase().includes(q)) ||
         (n.short_name && n.short_name.toLowerCase().includes(q)) ||
@@ -73,8 +80,6 @@ export default function DashboardHeader({
         (n.zone && n.zone.toLowerCase().includes(q)) ||
         (n.description && n.description.toLowerCase().includes(q))
     ).slice(0, 8);
-    setSearchResults(matches);
-    setSearchOpen(matches.length > 0);
   }, [searchTerm, nodes]);
 
   const handleSelectAsset = (asset) => {
@@ -119,7 +124,10 @@ export default function DashboardHeader({
             className="search-input"
             placeholder="Search location, asset, or node ID..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setSearchOpen(true);
+            }}
             onFocus={() => { if (searchResults.length) setSearchOpen(true); }}
             aria-label="Search Assets"
           />
@@ -135,7 +143,7 @@ export default function DashboardHeader({
           )}
 
           {/* Search suggestions dropdown */}
-          {searchOpen && (
+          {searchOpen && searchResults.length > 0 && (
             <div className="search-results-dropdown">
               <div className="dropdown-search-header">
                 <span>Matching Infrastructure Assets ({searchResults.length})</span>
@@ -208,7 +216,57 @@ export default function DashboardHeader({
           <span className="notification-badge">4</span>
         </button>
 
-        <span style={{padding:'8px 12px',border:'1px solid #47b6d2',borderRadius:8,color:'#b9f0ff',fontSize:12,fontWeight:750}}>◉ Public Demo</span>
+        {/* User Profile or Public Demo */}
+        {user ? (
+          <div className="header-profile-menu-container" ref={profileRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              className="user-btn"
+              onClick={() => setProfileOpen(!profileOpen)}
+              title={`Logged in as ${user.username || user.email}`}
+              aria-expanded={profileOpen}
+            >
+              <div className="user-avatar-circle">
+                {(user.username || user.email || 'U').slice(0, 2).toUpperCase()}
+              </div>
+              <div className="user-text-col">
+                <span className="user-name-text">{user.username || 'Commander'}</span>
+                <span className="user-role-text">{user.role || 'Incident Commander'}</span>
+              </div>
+              <span className="dropdown-caret" aria-hidden="true">▾</span>
+            </button>
+
+            {profileOpen && (
+              <div className="profile-dropdown-menu">
+                <div className="profile-dropdown-info">
+                  <strong>{user.full_name || user.username}</strong>
+                  <span>{user.email}</span>
+                  <span className="profile-role-tag">{user.role || 'Incident Commander'}</span>
+                </div>
+                <div className="profile-divider" />
+                {onLogout && (
+                  <button
+                    type="button"
+                    className="profile-logout-btn"
+                    onClick={() => {
+                      setProfileOpen(false);
+                      onLogout();
+                    }}
+                  >
+                    🚪 Sign Out
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="header-demo-auth-group">
+            <span className="demo-pill-badge">◉ Public Demo</span>
+            <Link to="/login" className="header-signin-btn">
+              Sign In
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );

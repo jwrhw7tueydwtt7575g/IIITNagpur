@@ -1,0 +1,173 @@
+{
+  "city_id": "mumbai_coastal",
+  "city_name": "Mumbai Coastal Metropolitan Region",
+  "coordinates": { "lat": 19.0760, "lon": 72.8777 },
+  "elevation_range_m": [2, 45],
+  "monitored_assets_count": 96,
+  "primary_river": "Mithi River & Arabian Sea Coast",
+  "high_tide_danger_m": 4.5,
+  "zones": [
+    { "id": "m_00", "name": "South Mumbai Coastal", "vulnerability": 0.58, "drainage_capacity": 0.45 },
+    { "id": "m_01", "name": "Dadar Marine Basin", "vulnerability": 0.88, "drainage_capacity": 0.28 },
+    { "id": "m_02", "name": "Bandra Kurla Complex", "vulnerability": 0.52, "drainage_capacity": 0.60 },
+    { "id": "m_03", "name": "Kurla Mithi Riverfront", "vulnerability": 0.82, "drainage_capacity": 0.32 },
+    { "id": "m_04", "name": "Andheri Subway Lowland", "vulnerability": 0.75, "drainage_capacity": 0.35 },
+    { "id": "m_05", "name": "Dharavi Creek Basin", "vulnerability": 0.78, "drainage_capacity": 0.30 }
+  ],
+  "critical_landmarks": [
+    {
+      "name": "Dadar TT Marine Circle",
+      "aliases": ["dadar circle", "dadar tt", "dadar marine basin", "m_01"],
+      "associated_node_id": "m_01",
+      "sector": "transit",
+      "zone": "Dadar Marine Basin",
+      "base_elevation_m": 4.2,
+      "submergence_threshold_mm": 50.0,
+      "failure_mechanism": "High tide backflow through Love Grove sluice gates; storm runoff trapped by coastal surge."
+    },
+    {
+      "name": "Kurla Mithi River Sluice Regulator",
+      "aliases": ["kurla riverfront", "mithi river regulator", "kurla mithi", "m_03"],
+      "associated_node_id": "m_03",
+      "sector": "drainage",
+      "zone": "Kurla Mithi Riverfront",
+      "base_elevation_m": 3.8,
+      "submergence_threshold_mm": 60.0,
+      "failure_mechanism": "Mithi river crest exceeds 4.2m; reverse tidal surge inundates railway tracks at Kurla Junction."
+    },
+    {
+      "name": "Andheri Subway Lowland Corridor",
+      "aliases": ["andheri subway", "andheri underpass", "m_04"],
+      "associated_node_id": "m_04",
+      "sector": "transit",
+      "zone": "Andheri Subway Lowland",
+      "base_elevation_m": 5.1,
+      "submergence_threshold_mm": 45.0,
+      "failure_mechanism": "Natural depression basin overwhelmed by Western Express Highway surface runoff."
+    },
+    {
+      "name": "Bandra Kurla Financial Hub Power Feeder",
+      "aliases": ["bkc", "bandra kurla complex", "bkc substation", "m_02"],
+      "associated_node_id": "m_02",
+      "sector": "power",
+      "zone": "Bandra Kurla Complex",
+      "base_elevation_m": 6.8,
+      "submergence_threshold_mm": 85.0,
+      "failure_mechanism": "Basement transformer flooding in commercial complex; backup generators flooded."
+    },
+    {
+      "name": "KEM & Sion Trauma Hospital Hub",
+      "aliases": ["kem hospital", "sion hospital", "south mumbai trauma", "m_00"],
+      "associated_node_id": "m_00",
+      "sector": "healthcare",
+      "zone": "South Mumbai Coastal",
+      "base_elevation_m": 7.5,
+      "submergence_threshold_mm": 95.0,
+      "failure_mechanism": "Access roads inundated; ground floor outpatient and trauma bays face water ingress."
+    }
+  ],
+  "scenarios": {
+    "cloudburst": {
+      "scenario_id": "cloudburst",
+      "title": "Coastal Cloudburst & Extreme 4.8m Spring Tide Surge",
+      "peak_rainfall_mm_hr": 115.0,
+      "average_city_risk": 0.758,
+      "threat_status": "HIGH_RISK",
+      "high_tide_m": 4.85,
+      "hospital_load_factor": 0.88,
+      "grid_stress_factor": 0.70,
+      "traffic_congestion_index": 0.94,
+      "primary_failed_nodes": ["m_01", "m_03", "m_04"],
+      "primary_affected_nodes": ["m_00", "m_05"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+3h", "stage": "Monsoon Squall & Spring Tide", "desc": "115 mm/hr cloudburst coincides with 4.8m spring tide; sea outfall flap gates forced closed." },
+        { "t": "T+6h to T+12h", "stage": "Mithi River Overtopping & Lowland Deluge", "desc": "Mithi river breaches embankments; Kurla and Sion railway tracks submerged under 1.2m water." },
+        { "t": "T+18h to T+24h", "stage": "Arterial Highway Gridlock", "desc": "Western Express Highway and Eastern Freeway stalled; airport transit routes cut." },
+        { "t": "T+36h to T+48h", "stage": "Subway Submergence & Substation Tripping", "desc": "Andheri and Milan subways completely submerged; distribution transformers disconnected." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Engage Coastal Dewatering Pumping Stations", "location": "Love Grove, Britannia, & Cleaveland Bunder", "details": "Operate all 6 submersible pump arrays at full 36,000 liters/sec capacity." },
+        { "priority": 2, "action": "Halt Suburban Railway Operations on Lowland Sections", "location": "Kurla to Sion & Chunabhatti Corridors", "details": "Divert commuters to elevated Metro lines and municipal bus shuttles." },
+        { "priority": 3, "action": "Emergency Coastal Evacuation to High Ground", "location": "Dharavi Creek & Mithi Riverfront Settlements", "details": "Evacuate 35,000 residents to municipal secondary schools on Bandra ridge." }
+      ]
+    },
+    "upstream_dam_release": {
+      "scenario_id": "upstream_dam_release",
+      "title": "Tulsi & Vihar Lakes Emergency Spillway Overflow",
+      "peak_rainfall_mm_hr": 65.0,
+      "average_city_risk": 0.620,
+      "threat_status": "HIGH_RISK",
+      "high_tide_m": 4.10,
+      "hospital_load_factor": 0.70,
+      "grid_stress_factor": 0.58,
+      "traffic_congestion_index": 0.80,
+      "primary_failed_nodes": ["m_03", "m_05"],
+      "primary_affected_nodes": ["m_01", "m_02"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+12h", "stage": "Catchment Reservoir Surcharge", "desc": "Vihar Lake breaches spillway crest; 45,000 cusecs discharged into Mithi river." },
+        { "t": "T+18h to T+30h", "stage": "Industrial Estate Inundation", "desc": "Saki Naka and Kurla industrial units flooded; chemical runoff enters stream." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Clear Mithi River Estuary Bottlenecks", "location": "Mahim Causeway & Bandra Creek Bridge", "details": "Deploy hydraulic dredgers to break floating silt and plastic debris dams." }
+      ]
+    },
+    "compound_flood_epidemic": {
+      "scenario_id": "compound_flood_epidemic",
+      "title": "Leptospirosis & Vector Outbreak Post-Inundation",
+      "peak_rainfall_mm_hr": 42.0,
+      "average_city_risk": 0.510,
+      "threat_status": "WATCH",
+      "high_tide_m": 3.80,
+      "hospital_load_factor": 0.95,
+      "grid_stress_factor": 0.62,
+      "traffic_congestion_index": 0.72,
+      "primary_failed_nodes": ["m_00", "m_01"],
+      "primary_affected_nodes": ["m_03", "m_05"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+24h", "stage": "Prolonged Slum Waterlogging", "desc": "High rodent population and contaminated runoff create acute leptospirosis cluster." },
+        { "t": "T+36h to T+54h", "stage": "Hospital Emergency Triage Overload", "desc": "KEM, Sion, and Nair hospitals report 100% ICU bed occupancy." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Prophylactic Doxycycline Distribution", "location": "Kurla, Dharavi, & Wadala Wards", "details": "Distribute 200,000 preventative antibiotic doses via community health workers." }
+      ]
+    },
+    "heatwave_grid_stress": {
+      "scenario_id": "heatwave_grid_stress",
+      "title": "Coastal Humidity Heat Index Exceedance (52°C Apparent)",
+      "peak_rainfall_mm_hr": 0.0,
+      "average_city_risk": 0.340,
+      "threat_status": "WATCH",
+      "high_tide_m": 3.20,
+      "hospital_load_factor": 0.68,
+      "grid_stress_factor": 0.92,
+      "traffic_congestion_index": 0.58,
+      "primary_failed_nodes": ["m_02"],
+      "primary_affected_nodes": ["m_00"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+24h", "stage": "Humid Heat Stress & AC Grid Peak", "desc": "High humidity pushes heat index to 52°C; suburban distribution transformers overheat." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Activate Railway Station AC Cooling Zones", "location": "CSMT, Dadar, and Bandra Terminus", "details": "Open transit concourses for heat exhaustion first aid." }
+      ]
+    },
+    "quiet_baseline": {
+      "scenario_id": "quiet_baseline",
+      "title": "Nominal Coastal Equilibrium",
+      "peak_rainfall_mm_hr": 1.8,
+      "average_city_risk": 0.115,
+      "threat_status": "NORMAL",
+      "high_tide_m": 2.90,
+      "hospital_load_factor": 0.40,
+      "grid_stress_factor": 0.38,
+      "traffic_congestion_index": 0.45,
+      "primary_failed_nodes": [],
+      "primary_affected_nodes": [],
+      "cascade_timeline": [
+        { "t": "T+0h to T+72h", "stage": "Normal Tide & Commute Operations", "desc": "Tidal gates operating routinely; suburban rail and arterial corridors running on timetable." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Routine Storm Sluice Inspection", "location": "Haji Ali & Love Grove Gates", "details": "Verify hydraulic rams and tidal backflow flap seals." }
+      ]
+    }
+  }
+}

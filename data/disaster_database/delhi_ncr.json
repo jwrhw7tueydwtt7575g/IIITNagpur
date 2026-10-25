@@ -1,0 +1,214 @@
+{
+  "city_id": "delhi_ncr",
+  "city_name": "Delhi / National Capital Region",
+  "coordinates": { "lat": 28.6139, "lon": 77.2090 },
+  "elevation_range_m": [198, 225],
+  "monitored_assets_count": 108,
+  "primary_river": "Yamuna",
+  "river_danger_mark_m": 205.33,
+  "river_evacuation_mark_m": 206.0,
+  "zones": [
+    { "id": "z_north", "name": "North Delhi", "vulnerability": 0.65, "drainage_capacity": 0.42 },
+    { "id": "z_central", "name": "Central Delhi", "vulnerability": 0.58, "drainage_capacity": 0.50 },
+    { "id": "z_south", "name": "South Delhi", "vulnerability": 0.45, "drainage_capacity": 0.68 },
+    { "id": "z_east", "name": "East Delhi", "vulnerability": 0.72, "drainage_capacity": 0.38 },
+    { "id": "z_west", "name": "West Delhi", "vulnerability": 0.52, "drainage_capacity": 0.55 }
+  ],
+  "critical_landmarks": [
+    {
+      "name": "Ring Road Underpass #43",
+      "aliases": ["mathura road underpass", "ring road underpass", "underpass 43", "node_43"],
+      "associated_node_id": "node_43",
+      "sector": "transit",
+      "zone": "Central Delhi",
+      "base_elevation_m": 201.2,
+      "submergence_threshold_mm": 65.0,
+      "failure_mechanism": "Surface runoff pooling in depression basin; reverse sewer surcharge from saturated Barapullah outfall."
+    },
+    {
+      "name": "ITO Bridge & Sluice Regulator",
+      "aliases": ["ito bridge", "ito barrage", "ito chokepoint", "ito", "node_18"],
+      "associated_node_id": "node_18",
+      "sector": "drainage",
+      "zone": "East Delhi",
+      "base_elevation_m": 203.8,
+      "submergence_threshold_mm": 80.0,
+      "failure_mechanism": "Yamuna crest breach; silted sluice gates jammed, causing reverse backflow into Vikas Marg."
+    },
+    {
+      "name": "Minto Bridge Underpass",
+      "aliases": ["minto bridge", "minto road", "connaught place subway", "node_71"],
+      "associated_node_id": "node_71",
+      "sector": "transit",
+      "zone": "Central Delhi",
+      "base_elevation_m": 202.1,
+      "submergence_threshold_mm": 55.0,
+      "failure_mechanism": "Gravity drainage capacity exhausted; underpass water level exceeds 1.8 meters, stalling bus transit."
+    },
+    {
+      "name": "Maharani Bagh 400kV Substation",
+      "aliases": ["maharani bagh substation", "400kv substation", "delhi grid substation", "node_30"],
+      "associated_node_id": "node_30",
+      "sector": "power",
+      "zone": "South Delhi",
+      "base_elevation_m": 204.5,
+      "submergence_threshold_mm": 90.0,
+      "failure_mechanism": "Substation transformer basements inundated; automatic thermal and earth-fault disconnects tripped."
+    },
+    {
+      "name": "AIIMS Apex Trauma Center Corridor",
+      "aliases": ["aiims trauma", "aiims hospital", "apex trauma center", "node_1"],
+      "associated_node_id": "node_1",
+      "sector": "healthcare",
+      "zone": "South Delhi",
+      "base_elevation_m": 218.0,
+      "submergence_threshold_mm": 120.0,
+      "failure_mechanism": "Access arterial routes blocked by floodwaters; emergency trauma ambulance arrivals delayed by 45 minutes."
+    },
+    {
+      "name": "IGI Airport Terminal-3 Expressway Corridor",
+      "aliases": ["igi airport", "t3 expressway", "airport terminal 3", "node_63"],
+      "associated_node_id": "node_63",
+      "sector": "transit",
+      "zone": "West Delhi",
+      "base_elevation_m": 222.0,
+      "submergence_threshold_mm": 110.0,
+      "failure_mechanism": "Feeder ramp waterlogging; regional passenger transfers stranded on airport expressway."
+    }
+  ],
+  "scenarios": {
+    "cloudburst": {
+      "scenario_id": "cloudburst",
+      "title": "Monsoon Cloudburst & Flash Inundation",
+      "peak_rainfall_mm_hr": 92.5,
+      "average_city_risk": 0.645,
+      "threat_status": "HIGH_RISK",
+      "river_gauge_crest_m": 206.85,
+      "hospital_load_factor": 0.78,
+      "grid_stress_factor": 0.66,
+      "traffic_congestion_index": 0.88,
+      "primary_failed_nodes": ["node_43", "node_18", "node_71"],
+      "primary_affected_nodes": ["node_30", "node_52", "node_64"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+3h", "stage": "Intense Precipitation Inundation", "desc": "Rainfall exceeds 90 mm/hr; localized runoff overwhelms surface drainage." },
+        { "t": "T+6h to T+12h", "stage": "Stormwater Sluice Saturation", "desc": "Trunk sewer outfalls submerged; reverse backflow inundates lowlands." },
+        { "t": "T+18h to T+24h", "stage": "Arterial Road Network Impedance", "desc": "Ring Road underpasses flooded; traffic speeds plunge 82%." },
+        { "t": "T+36h to T+48h", "stage": "EMS Delays & Hospital Surge", "desc": "Trauma center ambulance arrivals delayed; regional emergency rooms hit 88% capacity." },
+        { "t": "T+54h to T+72h", "stage": "Substation Flooding & Blackouts", "desc": "Basement transformer flooding triggers power trips across affected zones." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Deploy Mobile High-Volume Dewatering Pumps", "location": "Ring Road Underpass #43 & Barapullah Basin", "details": "Mobilize 4 diesel pumps (500 HP each) to eject water into Barapullah elevated drain." },
+        { "priority": 2, "action": "Activate Arterial Traffic Diversions", "location": "Mathura Road & Minto Bridge", "details": "Divert all commercial and non-emergency traffic via Outer Ring Road." },
+        { "priority": 3, "action": "Emergency EMS Corridor Staging", "location": "Dhaula Kuan Flyover Junction", "details": "Stage 8 advanced life support ambulances on elevated carriageways for rapid trauma dispatch." },
+        { "priority": 4, "action": "Substation Water Sentry & Pump Activation", "location": "Maharani Bagh 400kV Substation", "details": "Engage perimeter flood gates; prepare automatic power load redistribution." }
+      ],
+      "evacuation_corridor": {
+        "origin": "AIIMS Apex Trauma (node_1)",
+        "destination": "IGI Airport T3 (node_63)",
+        "safe_distance_km": 15.4,
+        "transit_time_min": 28,
+        "hazards_avoided": 3,
+        "waypoints": ["node_1 (AIIMS)", "node_71 (Ring Rd)", "node_52 (Dhaula Kuan)", "node_64 (NH-48)", "node_63 (IGI T3)"]
+      }
+    },
+    "upstream_dam_release": {
+      "scenario_id": "upstream_dam_release",
+      "title": "Hathnikund Barrage High-Volume River Surge",
+      "peak_rainfall_mm_hr": 35.0,
+      "average_city_risk": 0.582,
+      "threat_status": "HIGH_RISK",
+      "river_gauge_crest_m": 208.65,
+      "hospital_load_factor": 0.62,
+      "grid_stress_factor": 0.54,
+      "traffic_congestion_index": 0.74,
+      "primary_failed_nodes": ["node_18", "node_14", "node_22"],
+      "primary_affected_nodes": ["node_43", "node_30"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+12h", "stage": "Upstream Barrage Discharge", "desc": "350,000 cusecs discharged upstream; surge wave travels down Yamuna channel." },
+        { "t": "T+18h to T+30h", "stage": "Embankment Breach & Lowland Flooding", "desc": "Water level breaches 208m; floodplain settlements and agricultural tracts submerged." },
+        { "t": "T+36h to T+48h", "stage": "River Bridge Closures & Feeder Gridlock", "desc": "Old Yamuna Bridge and Geeta Colony road closed to traffic." },
+        { "t": "T+54h to T+72h", "stage": "Water Treatment Plant Shutdown", "desc": "Wazirabad and Chandrawal water treatment plants submerged; municipal supply cut." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Evacuate Low-Lying Yamuna Floodplain Settlements", "location": "Kashmere Gate to Mayur Vihar Floodplains", "details": "Relocate 25,000 residents to elevated municipal school relief camps." },
+        { "priority": 2, "action": "Reinforce Embankment Sluice Regulators", "location": "ITO Barrage & Drain No. 12 Outfall", "details": "Deploy sandbag revetments and emergency sheet piling." },
+        { "priority": 3, "action": "Drinking Water Tanker Dispatch", "location": "Central & East Delhi Wards", "details": "Stage 400 municipal potable water tankers to compensate for WTP shutdowns." }
+      ],
+      "evacuation_corridor": {
+        "origin": "East Delhi Lowlands (node_18)",
+        "destination": "South Delhi Elevated Relief Hub (node_52)",
+        "safe_distance_km": 18.2,
+        "transit_time_min": 34,
+        "hazards_avoided": 4,
+        "waypoints": ["node_18 (ITO)", "node_71 (Minto Rd)", "node_1 (AIIMS)", "node_52 (Dhaula Kuan)"]
+      }
+    },
+    "compound_flood_epidemic": {
+      "scenario_id": "compound_flood_epidemic",
+      "title": "Prolonged Waterlogging & Waterborne Epidemic Surge",
+      "peak_rainfall_mm_hr": 48.0,
+      "average_city_risk": 0.493,
+      "threat_status": "WATCH",
+      "river_gauge_crest_m": 206.10,
+      "hospital_load_factor": 0.94,
+      "grid_stress_factor": 0.60,
+      "traffic_congestion_index": 0.70,
+      "primary_failed_nodes": ["node_1", "node_5"],
+      "primary_affected_nodes": ["node_43", "node_18", "node_71"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+18h", "stage": "Submerged Sewer Water Contamination", "desc": "Damaged potable pipes infiltrate sewage; bacterial contamination index surges." },
+        { "t": "T+24h to T+36h", "stage": "Gastroenteritis & Leptospirosis Outbreak", "desc": "Emergency hotline receives 4x call surge reporting acute fever and dehydration." },
+        { "t": "T+42h to T+54h", "stage": "Hospital Bed & ICU Saturation", "desc": "Trauma and infectious disease wards exceed 95% capacity; IV fluids stock critical." },
+        { "t": "T+60h to T+72h", "stage": "Cross-Zone Medical Transport Gridlock", "desc": "Ambulance response times delayed; patient transfers diverted to neighboring states." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Distribute Emergency Water Purification & ORS Kits", "location": "East & North Delhi High-Density Wards", "details": "Distribute 100,000 chlorine tablets and oral rehydration salts via health workers." },
+        { "priority": 2, "action": "Expand Temporary Medical Bed Capacity", "location": "Indira Gandhi Indoor Stadium & Community Halls", "details": "Erect 500-bed field triage clinic with dedicated oxygen and rehydration bays." },
+        { "priority": 3, "action": "Super-Chlorination of Municipal Distribution Mains", "location": "Sonia Vihar & Wazirabad Feeder Lines", "details": "Elevate residual chlorine to 0.5 ppm at distribution points." }
+      ]
+    },
+    "heatwave_grid_stress": {
+      "scenario_id": "heatwave_grid_stress",
+      "title": "Extreme 46°C Heatwave & Electrical Substation Stress",
+      "peak_rainfall_mm_hr": 0.5,
+      "average_city_risk": 0.385,
+      "threat_status": "WATCH",
+      "river_gauge_crest_m": 204.10,
+      "hospital_load_factor": 0.72,
+      "grid_stress_factor": 0.94,
+      "traffic_congestion_index": 0.55,
+      "primary_failed_nodes": ["node_30", "node_34"],
+      "primary_affected_nodes": ["node_1", "node_63"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+18h", "stage": "Severe Ambient Heat Wave Exceedance", "desc": "Dry bulb temperature hits 46.5°C; urban heat island intensifies in concrete dense zones." },
+        { "t": "T+24h to T+36h", "stage": "Peak HVAC Cooling Power Demand", "desc": "Peak electricity load hits 8,650 MW; distribution transformers run at thermal limits." },
+        { "t": "T+42h to T+54h", "stage": "Substation Thermal Disconnects & Outages", "desc": "400kV transformers trigger automatic thermal cutoffs; rolling load shedding initiated." },
+        { "t": "T+60h to T+72h", "stage": "Water Pumping Station Interruption", "desc": "Power cuts halt municipal booster pumps; drinking water delivery drops 60%." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Activate Public Cooling Shelters & Water Stations", "location": "Metro Stations & Community Centers", "details": "Open air-conditioned shelters with medical hydration staff." },
+        { "priority": 2, "action": "Transformer Water Mist Cooling", "location": "Maharani Bagh & Mandi Park Substations", "details": "Deploy fire service water mist sprays to cool transformer radiator fins." },
+        { "priority": 3, "action": "Emergency Generator Fuel Reserves for Hospitals", "location": "AIIMS, Safdarjung, and LNJP Hospitals", "details": "Top up diesel generator reserves to 72-hour operating capacity." }
+      ]
+    },
+    "quiet_baseline": {
+      "scenario_id": "quiet_baseline",
+      "title": "Nominal Operational Baseline",
+      "peak_rainfall_mm_hr": 2.5,
+      "average_city_risk": 0.126,
+      "threat_status": "NORMAL",
+      "river_gauge_crest_m": 204.20,
+      "hospital_load_factor": 0.38,
+      "grid_stress_factor": 0.35,
+      "traffic_congestion_index": 0.42,
+      "primary_failed_nodes": [],
+      "primary_affected_nodes": [],
+      "cascade_timeline": [
+        { "t": "T+0h to T+72h", "stage": "Equilibrium Operational State", "desc": "All urban transit corridors, drainage gates, power lines, and emergency rooms operate within safe design margins." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Routine Sluice Gate & Canal De-Silting", "location": "Najafgarh Drain & Barapullah Basin", "details": "Maintain scheduled preventive maintenance of drainage intake grills." }
+      ]
+    }
+  }
+}

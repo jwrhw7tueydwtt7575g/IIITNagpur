@@ -274,15 +274,35 @@ export default function RoutePlanner({
         </div>
       )}
 
-      {/* Primary Action Button */}
-      <button
-        type="button"
-        className="btn-primary-find-route"
-        onClick={handleFindRoute}
-        disabled={loading}
-      >
-        {loading ? 'Calculating Safest Corridor...' : 'FIND SAFEST ROUTE'}
-      </button>
+      {/* Primary Action Buttons */}
+      <div className="planner-action-btn-row">
+        <button
+          type="button"
+          className="btn-primary-find-route"
+          onClick={handleFindRoute}
+          disabled={loading}
+        >
+          {loading ? 'Calculating Safest Corridor...' : 'FIND SAFEST ROUTE'}
+        </button>
+        <button
+          type="button"
+          className={`btn-toggle-pick-mode ${routingMode ? 'active' : ''}`}
+          onClick={onToggleRoutingMode}
+          title={routingMode ? 'Exit Map Pick Mode' : 'Click nodes directly on map'}
+        >
+          {routingMode ? 'Exit Pick' : '📍 Pick on Map'}
+        </button>
+        {activeRoute && (
+          <button
+            type="button"
+            className="btn-planner-clear"
+            onClick={onClearRoute}
+            title="Clear Route"
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       {/* Route Options List */}
       <div className="route-options-section">

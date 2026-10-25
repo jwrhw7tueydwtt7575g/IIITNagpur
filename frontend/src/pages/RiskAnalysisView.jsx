@@ -7,7 +7,7 @@ export default function RiskAnalysisView({
   onSelectNode = () => {},
   onNavigateToMap = () => {},
 }) {
-  const nodes = graph?.nodes || [];
+  const nodes = useMemo(() => graph?.nodes || [], [graph?.nodes]);
   const total = nodes.length || 108;
 
   // Derive risk statistics from backend state
@@ -92,6 +92,11 @@ export default function RiskAnalysisView({
           <p className="risk-sub-title">
             Quantitative percolation modeling, topological bottlenecks, and cascading vulnerability indices across the metropolitan grid.
           </p>
+        </div>
+        <div className="risk-header-badge">
+          <span className={`risk-scenario-pill ${simulation ? 'simulated' : 'baseline'}`}>
+            {simulation ? '🌧️ Monsoon Cloudburst Active' : '🏛️ Baseline Operations (Nominal)'}
+          </span>
         </div>
       </div>
 

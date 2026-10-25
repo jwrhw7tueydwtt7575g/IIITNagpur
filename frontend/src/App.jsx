@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
-import { useAuth } from './context/AuthContext.jsx';
+import { useAuth } from './context/useAuth.js';
 
 import DashboardHeader from './components/Dashboard/DashboardHeader.jsx';
 import Sidebar from './components/Dashboard/Sidebar.jsx';
@@ -9,7 +10,6 @@ import KpiCards from './components/Dashboard/KpiCards.jsx';
 import DelhiMap from './components/Dashboard/DelhiMap.jsx';
 import GraphView from './components/Dashboard/GraphView.jsx';
 import AssetInspector from './components/Dashboard/AssetInspector.jsx';
-import RoutePlanner from './components/Dashboard/RoutePlanner.jsx';
 import MapLegend from './components/Dashboard/MapLegend.jsx';
 import LiveTrafficAlerts from './components/Dashboard/LiveTrafficAlerts.jsx';
 import RiskOverviewChart from './components/Dashboard/RiskOverviewChart.jsx';
@@ -18,6 +18,7 @@ import SimulationSummaryCard from './components/Dashboard/SimulationSummaryCard.
 import MethodologyModal from './components/Dashboard/MethodologyModal.jsx';
 import HowItWorks from './components/Dashboard/HowItWorks.jsx';
 import QuickActionsBar from './components/Dashboard/QuickActionsBar.jsx';
+import CrisisForecasterView from './components/Warning/CrisisForecasterView.jsx';
 
 // Dedicated Enterprise View Pages
 import SimulationView from './pages/SimulationView.jsx';
@@ -26,13 +27,17 @@ import RiskAnalysisView from './pages/RiskAnalysisView.jsx';
 import EmergencyRoutingView from './pages/EmergencyRoutingView.jsx';
 import ReportsView from './pages/ReportsView.jsx';
 import SettingsView from './pages/SettingsView.jsx';
+import SensorTelemetryView from './pages/SensorTelemetryView.jsx';
+import Login from './pages/Login.jsx';
+
+import Register from './pages/Register.jsx';
 
 import MapView from './components/HistoricalMap/MapView.jsx';
 import NepalReferenceView from './components/NepalMap/NepalReferenceView.jsx';
 import { API_BASE as API } from './config.js';
 
 function Dashboard() {
-  const { fetchWithAuth } = useAuth();
+  const { user, logout, fetchWithAuth } = useAuth();
 
   // Active navigation tabs: 'dashboard' | 'simulation' | 'infrastructure' | 'risk_analysis' | 'emergency_routing' | 'historical_replay' | 'reports' | 'settings'
   const [activeNav, setActiveNav] = useState('dashboard');
@@ -130,10 +135,6 @@ function Dashboard() {
   // Initial Graph Fetch
   const loadGraph = useCallback(async () => {
     try {
-      setInitialLoading(true);
-      setError('');
-      setConnectionStatus('connecting');
-
       const response = await fetchWithAuth(`${API}/graph`);
       if (!response.ok) {
         throw new Error(`Server returned HTTP ${response.status}: Failed to load infrastructure network.`);
@@ -173,25 +174,50 @@ function Dashboard() {
   }, [fetchWithAuth, handleCalculateRoute]);
 
   useEffect(() => {
-    loadGraph();
+    let active = true;
+    const init = async () => {
+      if (active) {
+        await loadGraph();
+      }
+    };
+    init();
     const interval = setInterval(checkConnection, 15000);
-    return () => clearInterval(interval);
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
   }, [loadGraph, checkConnection]);
 
-  // Run Cascading Failure Simulation (Heavy Rain 90mm/h)
-  const runSimulation = async () => {
+  // Run Cascading Failure Simulation (Heavy Rain or Targeted Place Disaster)
+  const runSimulation = async (placeOptions = null) => {
     if (loading) return;
     try {
       setLoading(true);
       setError('');
 
-      const response = await fetchWithAuth(`${API}/simulate/heavy-rain`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ rainfall_level: 90 }),
-      });
+      let response;
+      if (placeOptions && placeOptions.place_name) {
+        response = await fetchWithAuth(`${API}/api/simulate/place`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            place_name: placeOptions.place_name,
+            disaster_type: placeOptions.disaster_type || 'flood',
+            severity: placeOptions.severity || 75,
+            city: placeOptions.city || (selectedLocation?.includes('mumbai') ? 'mumbai_coastal' : selectedLocation?.includes('kathmandu') ? 'kathmandu_valley' : 'delhi_ncr'),
+          }),
+        });
+      } else {
+        response = await fetchWithAuth(`${API}/simulate/heavy-rain`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ rainfall_level: 90 }),
+        });
+      }
 
       if (!response.ok) {
         throw new Error(`Simulation failed with status ${response.status}`);
@@ -323,8 +349,8 @@ function Dashboard() {
             if (activeNav !== 'dashboard') setActiveNav('dashboard');
           }}
           nodes={graph?.nodes || []}
-          user={null}
-          onLogout={undefined}
+          user={user}
+          onLogout={logout}
           selectedLocation={selectedLocation}
           setSelectedLocation={setSelectedLocation}
         />
@@ -349,7 +375,33 @@ function Dashboard() {
               {/* 1. Dashboard View (Master Command Center) */}
               {activeNav === 'dashboard' && (
                 <div className="dashboard-content-area">
-                  <div className="map-focus-intro"><div><span>SIMULATED GEOSPATIAL COMMAND CENTER</span><h2>Delhi Disaster Cascade Map</h2><p>Explore infrastructure failures, risk propagation and safer emergency corridors on the interactive map.</p></div><strong>{graph?.nodes?.length ?? 0} assets · {simulation?.failed_nodes?.length ?? 0} failures</strong></div>
+                  <div className="map-focus-intro">
+                    <div>
+                      <span>SIMULATED GEOSPATIAL COMMAND CENTER</span>
+                      <h2>Delhi Disaster Cascade Map</h2>
+                      <p>Explore infrastructure failures, risk propagation and safer emergency corridors on the interactive map.</p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => setActiveNav('warning_72h')}
+                        style={{
+                          background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                          color: '#ffffff',
+                          border: '1px solid #3b82f6',
+                          borderRadius: '8px',
+                          padding: '7px 14px',
+                          fontSize: '0.82rem',
+                          fontWeight: '700',
+                          cursor: 'pointer',
+                          boxShadow: '0 2px 8px rgba(37,99,235,0.35)',
+                        }}
+                      >
+                        ⏱️ 72-Hour Warning (4 States) →
+                      </button>
+                      <strong>{graph?.nodes?.length ?? 0} assets · {simulation?.failed_nodes?.length ?? 0} failures</strong>
+                    </div>
+                  </div>
 
                   {/* Center Visual & Right Inspector Split */}
                   <div className="center-workspace-grid">
@@ -357,7 +409,6 @@ function Dashboard() {
                       {centerViewType === 'map' ? (
                         <DelhiMap
                           nodes={graph?.nodes || []}
-                          edges={graph?.edges || []}
                           selectedNode={selectedNode}
                           onSelectNode={setSelectedNode}
                           mapStyle={mapStyle}
@@ -379,11 +430,6 @@ function Dashboard() {
                           onViewRouteOnMap={handleViewRouteOnMap}
                           routingLoading={routingLoading}
                           simulation={simulation}
-                          onRunSimulation={runSimulation}
-                          onResetNetwork={resetNetwork}
-                          loadingSimulation={loading}
-                          selectedScenario={selectedScenario}
-                          setSelectedScenario={setSelectedScenario}
                         />
                       ) : (
                         <GraphView
@@ -408,7 +454,7 @@ function Dashboard() {
                     </div>
                   </div>
 
-                  <KpiCards graph={graph} _simulation={simulation} onSelectNode={setSelectedNode} />
+                  <KpiCards graph={graph} simulation={simulation} onSelectNode={setSelectedNode} />
                   {/* Master Map Legend & Live Traffic Alerts (Matching Reference Screenshot) */}
                   <div className="dashboard-map-bottom-grid">
                     <div className="map-bottom-legend-col">
@@ -503,7 +549,14 @@ function Dashboard() {
                 </div>
               )}
 
+              {/* 72-Hour Warning System (Core PS Forecaster) */}
+              {activeNav === 'warning_72h' && <CrisisForecasterView />}
+
+              {/* Edge Sensor Telemetry & Prophet Forecast */}
+              {activeNav === 'sensor_telemetry' && <SensorTelemetryView />}
+
               {/* 2. Simulation View */}
+
               {activeNav === 'simulation' && (
                 <SimulationView
                   graph={graph}
@@ -513,6 +566,7 @@ function Dashboard() {
                   loading={loading}
                   selectedScenario={selectedScenario}
                   setSelectedScenario={setSelectedScenario}
+                  selectedLocation={selectedLocation}
                   onSelectNode={handleNavigateToMapWithNode}
                 />
               )}
@@ -594,6 +648,7 @@ function Dashboard() {
                   graph={graph}
                   simulation={simulation}
                   activeRoute={activeRoute}
+                  selectedLocation={selectedLocation}
                 />
               )}
 
@@ -610,6 +665,10 @@ function Dashboard() {
             </>
           )}
         </div>
+
+        <footer className="workspace-attribution-footer">
+          Data attributions: Open-Meteo, OpenStreetMap, Copernicus, NASA, TomTom, IMD where used. Provenance: real source / twin / synthetic
+        </footer>
       </main>
 
       {/* Educational & Methodology Modal */}
@@ -621,4 +680,12 @@ function Dashboard() {
   );
 }
 
-export default function App() { return <Dashboard />; }
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/*" element={<Dashboard />} />
+    </Routes>
+  );
+}

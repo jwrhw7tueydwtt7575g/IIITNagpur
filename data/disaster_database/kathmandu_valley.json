@@ -1,0 +1,132 @@
+{
+  "city_id": "kathmandu_valley",
+  "city_name": "Kathmandu Valley Metropolitan Region",
+  "coordinates": { "lat": 27.7172, "lon": 85.3240 },
+  "elevation_range_m": [1300, 1450],
+  "monitored_assets_count": 64,
+  "primary_river": "Bagmati & Bishnumati River Basins",
+  "river_danger_mark_m": 1308.5,
+  "zones": [
+    { "id": "k_01", "name": "Thamel Central Commercial", "vulnerability": 0.50, "drainage_capacity": 0.55 },
+    { "id": "k_02", "name": "Patan Historic Basin", "vulnerability": 0.68, "drainage_capacity": 0.40 },
+    { "id": "k_03", "name": "Balkhu Bagmati Confluence", "vulnerability": 0.85, "drainage_capacity": 0.30 },
+    { "id": "k_04", "name": "Bhaktapur Hanumante Lowland", "vulnerability": 0.80, "drainage_capacity": 0.35 },
+    { "id": "k_05", "name": "Tribhuvan Airport Ridge", "vulnerability": 0.38, "drainage_capacity": 0.70 }
+  ],
+  "critical_landmarks": [
+    {
+      "name": "Balkhu Bagmati River Bridge Corridor",
+      "aliases": ["balkhu bridge", "bagmati river corridor", "k_03"],
+      "associated_node_id": "k_03",
+      "sector": "transit",
+      "zone": "Balkhu Bagmati Confluence",
+      "base_elevation_m": 1302.0,
+      "submergence_threshold_mm": 70.0,
+      "failure_mechanism": "Bagmati river surges past 4.5m over danger mark; Ring Road underpass and vegetable wholesale market submerged."
+    },
+    {
+      "name": "Hanumante River Sluice Regulator",
+      "aliases": ["hanumante river", "bhaktapur basin", "k_04"],
+      "associated_node_id": "k_04",
+      "sector": "drainage",
+      "zone": "Bhaktapur Hanumante Lowland",
+      "base_elevation_m": 1305.0,
+      "submergence_threshold_mm": 65.0,
+      "failure_mechanism": "Hanumante river overflows banks; historic settlements and hospital access roads flooded."
+    },
+    {
+      "name": "Tribhuvan International Airport Transit Hub",
+      "aliases": ["tia airport", "kathmandu airport", "k_05"],
+      "associated_node_id": "k_05",
+      "sector": "transit",
+      "zone": "Tribhuvan Airport Ridge",
+      "base_elevation_m": 1338.0,
+      "submergence_threshold_mm": 130.0,
+      "failure_mechanism": "Elevated ridge secure; operational as central emergency airlift and relief logistics staging base."
+    }
+  ],
+  "scenarios": {
+    "cloudburst": {
+      "scenario_id": "cloudburst",
+      "title": "Himalayan Cloudburst & Riverine Flood Deluge",
+      "peak_rainfall_mm_hr": 95.0,
+      "average_city_risk": 0.710,
+      "threat_status": "HIGH_RISK",
+      "river_gauge_crest_m": 1310.2,
+      "hospital_load_factor": 0.85,
+      "grid_stress_factor": 0.65,
+      "traffic_congestion_index": 0.88,
+      "primary_failed_nodes": ["k_03", "k_04"],
+      "primary_affected_nodes": ["k_02"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+4h", "stage": "Monsoon Squall", "desc": "Intense Himalayan downpour fills Bagmati basin; mountain runoff accelerates." },
+        { "t": "T+6h to T+14h", "stage": "Riverbank Breach", "desc": "Balkhu and Teku riverbanks submerged; Ring Road underpasses blocked." },
+        { "t": "T+18h to T+36h", "stage": "Airlift Mobilization", "desc": "Kathmandu road exits blocked by landslides; TIA airport operational as logistics hub." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Evacuate Bagmati & Bishnumati Riverside Settlements", "location": "Balkhu to Teku Riverbanks", "details": "Relocate 12,000 residents to elevated community grounds." },
+        { "priority": 2, "action": "Stage Airlift Supply at Tribhuvan Airport", "location": "TIA Runway South Apron", "details": "Coordinate Nepal Army helicopter food and rescue drops." }
+      ],
+      "evacuation_corridor": {
+        "origin": "Balkhu Lowland Settlement (k_03)",
+        "destination": "Tribhuvan Airport Emergency Staging Hub (k_05)",
+        "safe_distance_km": 12.4,
+        "transit_time_min": 26,
+        "hazards_avoided": 2,
+        "waypoints": ["k_03 (Balkhu)", "k_02 (Patan Ridge)", "k_05 (TIA Airport)"]
+      }
+    },
+    "upstream_dam_release": {
+      "scenario_id": "upstream_dam_release",
+      "title": "Kulekhani Reservoir Emergency Spillway Discharge",
+      "peak_rainfall_mm_hr": 45.0,
+      "average_city_risk": 0.640,
+      "threat_status": "HIGH_RISK",
+      "river_gauge_crest_m": 1309.5,
+      "hospital_load_factor": 0.75,
+      "grid_stress_factor": 0.60,
+      "traffic_congestion_index": 0.82,
+      "primary_failed_nodes": ["k_03"],
+      "primary_affected_nodes": ["k_04", "k_02"],
+      "cascade_timeline": [
+        { "t": "T+0h to T+6h", "stage": "Emergency Gate Opening", "desc": "Kulekhani reservoir reaches full capacity (1,530m); spillway gates opened." },
+        { "t": "T+8h to T+20h", "stage": "Downstream Surcharge", "desc": "Surge enters Bagmati river canyon, overwhelming Balkhu agricultural lowlands." }
+      ],
+      "directives": [
+        { "priority": 1, "action": "Sound Valley Flood Warning Sirens", "location": "Bagmati Corridor Settlements", "details": "Alert all riparian zones 2 hours before peak discharge reaches valley." }
+      ],
+      "evacuation_corridor": {
+        "origin": "Balkhu Basin (k_03)",
+        "destination": "TIA Airport Logistics (k_05)",
+        "safe_distance_km": 12.4,
+        "transit_time_min": 26,
+        "hazards_avoided": 2,
+        "waypoints": ["k_03 (Balkhu)", "k_05 (TIA)"]
+      }
+    },
+    "quiet_baseline": {
+      "scenario_id": "quiet_baseline",
+      "title": "Nominal Valley Equilibrium",
+      "peak_rainfall_mm_hr": 3.0,
+      "average_city_risk": 0.120,
+      "threat_status": "NORMAL",
+      "river_gauge_crest_m": 1304.0,
+      "hospital_load_factor": 0.42,
+      "grid_stress_factor": 0.40,
+      "traffic_congestion_index": 0.48,
+      "primary_failed_nodes": [],
+      "primary_affected_nodes": [],
+      "directives": [
+        { "priority": 1, "action": "Routine River Canal Clearing", "location": "Bagmati River Channel", "details": "Remove riverbed sediment buildup." }
+      ],
+      "evacuation_corridor": {
+        "origin": "Patan Hub (k_02)",
+        "destination": "TIA Logistics (k_05)",
+        "safe_distance_km": 9.5,
+        "transit_time_min": 18,
+        "hazards_avoided": 0,
+        "waypoints": ["k_02", "k_05"]
+      }
+    }
+  }
+}

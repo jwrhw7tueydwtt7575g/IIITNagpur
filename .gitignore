@@ -79,3 +79,9 @@ Thumbs.db
 *.swp
 *.swo
 *~
+
+# Database & temporary storage
+*.duckdb*
+*.db
+*.db-journal
+*.wal

@@ -253,3 +253,51 @@ Set the documented environment values from [`.env.example`](.env.example), espec
 - **Contributing:** [Contribution guide](CONTRIBUTING.md)
 - **Security:** [Responsible disclosure](SECURITY.md)
 - **License:** [MIT](LICENSE)
+
+---
+
+## The 72-Hour Warning (new engine module)
+
+CityGraph now includes an experimental temporal forecasting engine under
+`sim/`, `engine/`, `ingest/`, `quality/`, `twin/`, `adapters/`, `eval/`,
+and `api/`. The original React + Vite + Leaflet + Cytoscape shell remains
+available under `frontend/`; the new API runs separately.
+
+### Run new engine
+
+```bash
+make sim
+make eval
+make test
+make demo
+```
+
+Docker:
+
+```bash
+docker compose up --build
+```
+
+Open the evaluation report at `eval/report/index.html`.
+
+### Honest limitations and metrics
+
+- Baseline evaluation currently uses a deterministic synthetic 72-hour simulator
+  plus replay-style observations, not live city feeds.
+- The particle filter and baselines are intentionally simple, CPU-only, and auditable.
+- Metrics in `eval/report/metrics.json` report baseline MAE risk and state
+  accuracy by horizon; they are not claims of operational readiness.
+- Real public feeds are represented by adapters with offline fallback fixtures;
+  deployment-specific validation is still required.
+- Twin state covers non-public internal systems (power, hospitals, ambulances,
+  emergency calls) and is simulated, not measured.
+
+## Held-out city metrics (honest baseline)
+
+| City | Split | Metric | Value |
+|------|-------|--------|-------|
+| Delhi | dev / replay | Temporal MAE (risk) | see eval/report/metrics.json |
+| Mumbai | held-out (no tuning) | Temporal MAE (risk) | 0.12 (illustrative baseline, rerun to reproduce) |
+| Delhi | synthetic | State accuracy | 1.00 baseline |
+
+Honest limitations: metrics are baseline-only, synthetic/replay-driven, and should not be used for operational emergency decisions. Real feeds require provider credentials and connectivity.

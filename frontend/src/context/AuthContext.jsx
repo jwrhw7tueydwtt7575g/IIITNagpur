@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { API_BASE } from '../config.js';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './authContextInstance.js';
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('citygraph_token') || null);
@@ -154,12 +153,4 @@ export function AuthProvider({ children }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 }
