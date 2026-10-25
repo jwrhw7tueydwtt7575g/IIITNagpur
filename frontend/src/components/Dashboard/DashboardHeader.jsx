@@ -208,44 +208,7 @@ export default function DashboardHeader({
           <span className="notification-badge">4</span>
         </button>
 
-        {/* User Profile */}
-        <div className="header-user-cluster">
-          <button
-            type="button"
-            className="user-btn"
-            onClick={() => setProfileOpen(!profileOpen)}
-            aria-expanded={profileOpen}
-          >
-            <div className="user-avatar-circle">
-              {user?.full_name ? user.full_name[0].toUpperCase() : 'C'}
-            </div>
-            <div className="user-text-col">
-              <span className="user-name-text">{user?.full_name || 'City Operations Lead'}</span>
-              <span className="user-role-text">{user?.role || 'Incident Commander'}</span>
-            </div>
-          </button>
-
-          {profileOpen && (
-            <div className="profile-dropdown-menu">
-              <div className="profile-dropdown-info">
-                <strong>{user?.full_name || 'City Operations Lead'}</strong>
-                <span>{user?.email || 'commander@delhi-emergency.gov.in'}</span>
-                <span className="profile-role-tag">{user?.role || 'Incident Commander'}</span>
-              </div>
-              <div className="profile-divider"></div>
-              <button
-                type="button"
-                className="profile-logout-btn"
-                onClick={() => {
-                  setProfileOpen(false);
-                  if (onLogout) onLogout();
-                }}
-              >
-                ⏻ Sign Out
-              </button>
-            </div>
-          )}
-        </div>
+        <span style={{padding:'8px 12px',border:'1px solid #47b6d2',borderRadius:8,color:'#b9f0ff',fontSize:12,fontWeight:750}}>◉ Public Demo</span>
       </div>
     </header>
   );
