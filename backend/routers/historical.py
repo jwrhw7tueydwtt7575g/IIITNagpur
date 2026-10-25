@@ -11,7 +11,6 @@ from auth_utils import get_current_user
 router = APIRouter(
     prefix="/api/historical/delhi",
     tags=["Delhi Historical Flood Replay (July 2023)"],
-    dependencies=[Depends(get_current_user)],
 )
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data" / "delhi"
