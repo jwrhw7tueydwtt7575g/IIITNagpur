@@ -289,8 +289,8 @@ export default function DelhiMap({
   // Top Popovers & Controls
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showLayersDropdown, setShowLayersDropdown] = useState(false);
-  const [liveTrafficEnabled, setLiveTrafficEnabled] = useState(true);
-  const [showRoutePlanner, setShowRoutePlanner] = useState(true);
+  const [liveTrafficEnabled, setLiveTrafficEnabled] = useState(false);
+  const [showRoutePlanner, setShowRoutePlanner] = useState(false);
   const [selectedRouteOption, setSelectedRouteOption] = useState(1);
 
   // Filter States
@@ -421,7 +421,7 @@ export default function DelhiMap({
       center: DELHI_CENTER,
       zoom: DEFAULT_ZOOM,
       zoomControl: false,
-      attributionControl: false,
+      attributionControl: true,
     });
 
     // Track map zoom for responsive marker decluttering
@@ -455,6 +455,7 @@ export default function DelhiMap({
       maxZoom: initialTileConf.maxZoom,
     }).addTo(map);
     tileLayerRef.current = tileLayer;
+    L.control.scale({position:'bottomright',metric:true,imperial:false}).addTo(map);
 
     // Layer groups added to map
     riverLayerRef.current = L.layerGroup().addTo(map);
@@ -473,6 +474,7 @@ export default function DelhiMap({
       mapInstanceRef.current = null;
     };
   }, []); // Run once
+  useEffect(() => {const el=mapContainerRef.current?.parentElement;if(!el || typeof ResizeObserver==='undefined')return;const observer=new ResizeObserver(()=>mapInstanceRef.current?.invalidateSize({pan:false}));observer.observe(el);return()=>observer.disconnect();},[]);
 
   // Update Tile Layer when mapStyle changes
   useEffect(() => {
@@ -659,7 +661,7 @@ export default function DelhiMap({
         lineJoin: 'round',
         pane: 'trafficPane',
       });
-      line.bindTooltip(`Traffic: ${corridor.name} (${corridor.status.toUpperCase()})`, {
+      line.bindTooltip(`Illustrative traffic: ${corridor.name} (${corridor.status.toUpperCase()})`, {
         sticky: true,
         className: 'flood-tooltip',
       });
@@ -1003,6 +1005,8 @@ export default function DelhiMap({
     }
   };
 
+  const fitAllAssets = () => { const points = nodes.filter(n => Number.isFinite(Number(n.lat)) && Number.isFinite(Number(n.lng))).map(n => [Number(n.lat),Number(n.lng)]);if(mapInstanceRef.current && points.length>1)mapInstanceRef.current.fitBounds(L.latLngBounds(points),{padding:[40,40],maxZoom:13});};
+
   // Toggle Fullscreen
   const handleToggleFullscreen = () => {
     if (!mapContainerRef.current) return;
@@ -1044,7 +1048,7 @@ export default function DelhiMap({
             className={`basemap-pill-btn ${mapStyle === 'positron' ? 'active' : ''}`}
             onClick={() => onSetMapStyle('positron')}
           >
-            <span>Terrain</span>
+            <span>Minimal</span>
           </button>
           <div className="pill-divider" />
           <button
@@ -1248,9 +1252,9 @@ export default function DelhiMap({
             onClick={() => setLiveTrafficEnabled(!liveTrafficEnabled)}
             role="switch"
             aria-checked={liveTrafficEnabled}
-            title="Toggle Live Traffic Flow"
+            title="Toggle illustrative traffic overlay, not live traffic"
           >
-            <span className="traffic-label">Live Traffic</span>
+            <span className="traffic-label">Sample Traffic</span>
             <div className="switch-track">
               <div className="switch-thumb" />
             </div>
@@ -1345,11 +1349,11 @@ export default function DelhiMap({
           </svg>
         </button>
 
-        <div className="map-scale-pill" title="Map Scale">
-          <span>5 km</span>
-        </div>
+
       </div>
 
+      <button type="button" className="map-fit-all-assets" onClick={fitAllAssets}>⌖ Fit all assets</button>
+      <div className="map-demo-disclaimer">SIMULATED HAZARDS · Approximate locations · Not real-time emergency guidance</div>
       {/* North Compass Rose */}
       <div className="map-compass-badge" title="True North Orientation">
         <span className="compass-arrow">▲</span>
