@@ -22,6 +22,7 @@ from routers.auth import router as auth_router, seed_default_user
 from routers.historical import router as historical_router
 from routers.nepal import router as nepal_router
 from routers.warning import router as warning_router
+from routers.water_quality import router as water_quality_router
 from rate_limiter import limiter
 
 logger = logging.getLogger("citygraph.api")
@@ -113,6 +114,7 @@ app.include_router(auth_router)
 app.include_router(historical_router)
 app.include_router(nepal_router)
 app.include_router(warning_router)
+app.include_router(water_quality_router)
 
 
 class RainRequest(BaseModel):

@@ -46,6 +46,17 @@ export default function Sidebar({
       tooltip: 'Real-time ESP32 edge telemetry (MQ-135 Gas, DHT Temp/Humidity, IR Water) & Prophet forecast',
     },
     {
+      id: 'water_quality',
+      label: 'Water Quality',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+          <path d="M12 12a3 3 0 0 0 3-3" />
+        </svg>
+      ),
+      tooltip: 'JalNetra Sentinel-2 L2A optical water contamination surveillance & OpenAI emergency hospital/NGO dispatch',
+    },
+    {
       id: 'simulation',
 
       label: 'Simulation',

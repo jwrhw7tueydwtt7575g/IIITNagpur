@@ -1501,5 +1501,105 @@
   letter-spacing: -0.1px;
 }
 
-/* ORCATHON GIS showcase */
-.delhi-map-container{height:min(79vh,860px);min-height:650px;border-color:#96b3c9;box-shadow:0 12px 34px rgba(8,26,50,.16)}.delhi-map-container .leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.84)}.delhi-map-container .leaflet-control-scale{margin-bottom:28px}.map-fit-all-assets{position:absolute;z-index:900;right:15px;bottom:75px;padding:9px 12px;border-radius:8px;border:1px solid #c0d4e2;background:white;color:#173551;font-weight:700;font-size:11px;cursor:pointer}.map-demo-disclaimer{position:absolute;z-index:850;bottom:7px;left:50%;transform:translateX(-50%);padding:7px 12px;background:rgba(7,24,40,.92);border:1px solid #426682;border-radius:7px;color:#f0f8ff;pointer-events:none;font-size:10px;text-align:center;max-width:80%}@media(max-width:900px){.delhi-map-container{height:72vh;min-height:520px}.map-fit-all-assets{bottom:90px;right:8px}.map-demo-disclaimer{font-size:9px}}
+/* ---- Map container sizing & Leaflet attribution clean-up ---- */
+
+.delhi-map-container {
+  height: min(79vh, 860px);
+  min-height: 650px;
+  border-color: #96b3c9;
+  box-shadow: 0 12px 34px rgba(8, 26, 50, 0.16);
+}
+
+/* Native Leaflet attribution badge — neat, semi-transparent, bottom-left */
+.delhi-map-container .leaflet-control-attribution {
+  font-size: 9.5px;
+  font-family: inherit;
+  color: #334155;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(6px);
+  border-radius: 5px 0 0 0;
+  padding: 3px 7px;
+  border-top: 1px solid rgba(203, 213, 225, 0.7);
+  border-left: 1px solid rgba(203, 213, 225, 0.7);
+  box-shadow: none;
+}
+
+.delhi-map-container .leaflet-control-attribution a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.delhi-map-container .leaflet-control-attribution a:hover {
+  text-decoration: underline;
+}
+
+/* Scale bar — raise above the disclaimer banner */
+.delhi-map-container .leaflet-control-scale {
+  margin-bottom: 28px;
+  margin-right: 8px;
+}
+
+.delhi-map-container .leaflet-control-scale-line {
+  font-size: 9px;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.88);
+  border-color: #94a3b8;
+  border-top: none;
+}
+
+/* Fit-all-assets button */
+.map-fit-all-assets {
+  position: absolute;
+  z-index: 900;
+  right: 15px;
+  bottom: 75px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #c0d4e2;
+  background: white;
+  color: #173551;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.map-fit-all-assets:hover {
+  background: #f0f7ff;
+  border-color: #4f8bca;
+}
+
+/* Bottom disclaimer banner */
+.map-demo-disclaimer {
+  position: absolute;
+  z-index: 850;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 7px 12px;
+  background: rgba(7, 24, 40, 0.88);
+  border: 1px solid #426682;
+  border-radius: 7px;
+  color: #f0f8ff;
+  pointer-events: none;
+  font-size: 10px;
+  text-align: center;
+  max-width: 80%;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 900px) {
+  .delhi-map-container {
+    height: 72vh;
+    min-height: 520px;
+  }
+  .map-fit-all-assets {
+    bottom: 90px;
+    right: 8px;
+  }
+  .map-demo-disclaimer {
+    font-size: 9px;
+    max-width: 95%;
+  }
+}
+

@@ -12,35 +12,29 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-// Tile Layer Configurations (CARTO Voyager for clean, Google Maps-style geography)
+// Tile Layer Configurations — all free, no API key needed
 const TILE_LAYERS = {
   streets: {
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    subdomains: 'abcd',
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    subdomains: 'abc',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
     maxZoom: 19,
   },
   positron: {
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     subdomains: 'abcd',
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    maxZoom: 19,
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+    maxZoom: 20,
   },
   satellite: {
-    url: import.meta.env.VITE_MAPBOX_TOKEN
-      ? `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-      : 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: import.meta.env.VITE_MAPBOX_TOKEN ? '&copy; Mapbox &copy; Maxar' : '&copy; Esri, Maxar',
-    maxZoom: 19,
-    tileSize: import.meta.env.VITE_MAPBOX_TOKEN ? 512 : 256,
-    zoomOffset: import.meta.env.VITE_MAPBOX_TOKEN ? -1 : 0,
-  },
-  mapbox: {
-    url: `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN || ''}`,
-    attribution: '&copy; Mapbox &copy; OpenStreetMap',
-    maxZoom: 19,
-    tileSize: 512,
-    zoomOffset: -1,
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution:
+      'Tiles &copy; <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> &mdash; Source: Esri, Maxar, Earthstar Geographics',
+    maxZoom: 18,
+    tileSize: 256,
+    zoomOffset: 0,
   },
 };
 

@@ -28,6 +28,7 @@ import EmergencyRoutingView from './pages/EmergencyRoutingView.jsx';
 import ReportsView from './pages/ReportsView.jsx';
 import SettingsView from './pages/SettingsView.jsx';
 import SensorTelemetryView from './pages/SensorTelemetryView.jsx';
+import WaterQualityView from './pages/WaterQualityView.jsx';
 import Login from './pages/Login.jsx';
 
 import Register from './pages/Register.jsx';
@@ -554,6 +555,9 @@ function Dashboard() {
 
               {/* Edge Sensor Telemetry & Prophet Forecast */}
               {activeNav === 'sensor_telemetry' && <SensorTelemetryView />}
+
+              {/* Water Quality & JalNetra Optical Intelligence */}
+              {activeNav === 'water_quality' && <WaterQualityView />}
 
               {/* 2. Simulation View */}
 

@@ -6,7 +6,11 @@ export default function GraphView({
   graph,
   selectedNode,
   onSelectNode,
+  // centerViewType and onToggleView kept for prop compatibility — navigation is handled
+  // from the parent map view tab pills, not inside the graph view itself.
+  // eslint-disable-next-line no-unused-vars
   centerViewType = 'graph',
+  // eslint-disable-next-line no-unused-vars
   onToggleView = () => {},
 }) {
   const containerRef = useRef(null);
@@ -254,42 +258,31 @@ export default function GraphView({
 
   return (
     <div className="graph-view-container">
-      {/* Floating Top Controls Bar */}
-      <div className="map-top-bar">
-        <div className="view-toggle-pills" role="radiogroup" aria-label="Center View Mode">
-          <button
-            type="button"
-            className={`view-pill-btn ${centerViewType === 'map' ? 'active' : ''}`}
-            onClick={() => onToggleView('map')}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
-              <line x1="8" y1="2" x2="8" y2="18" />
-              <line x1="16" y1="6" x2="16" y2="22" />
-            </svg>
-            <span>Map View</span>
-          </button>
-          <button
-            type="button"
-            className={`view-pill-btn ${centerViewType === 'graph' ? 'active' : ''}`}
-            onClick={() => onToggleView('graph')}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-            <span>Graph View</span>
-          </button>
+      {/* Graph controls — no back option, user navigates via map tab pills */}
+      <div className="graph-top-bar">
+        <div className="graph-title-pill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          <span>Topology Graph</span>
         </div>
 
-        <div className="map-actions-group">
-          <button type="button" className="map-tool-btn" onClick={handleFit}>
+        <div className="graph-actions-group">
+          <button type="button" className="graph-action-btn" onClick={handleFit} title="Fit all nodes into view">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+            </svg>
             <span>Fit Graph</span>
           </button>
-          <button type="button" className="map-tool-btn" onClick={handleReset}>
+          <button type="button" className="graph-action-btn" onClick={handleReset} title="Reset pan and zoom">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="1 4 1 10 7 10" />
+              <path d="M3.51 15a9 9 0 1 0 .49-4.5" />
+            </svg>
             <span>Reset View</span>
           </button>
         </div>
@@ -297,8 +290,9 @@ export default function GraphView({
 
       <div ref={containerRef} className="cytoscape-canvas" />
 
-      <div className="delhi-map-footer-overlay">
-        <span className="region-indicator">CYTOSCAPE TOPOLOGICAL NETWORK • 70 NODES</span>
+      <div className="graph-footer-bar">
+        <span className="graph-footer-label">INFRASTRUCTURE TOPOLOGY NETWORK</span>
+        <span className="graph-footer-count">{(graph?.nodes || []).length} nodes · {(graph?.edges || []).length} edges</span>
       </div>
     </div>
   );

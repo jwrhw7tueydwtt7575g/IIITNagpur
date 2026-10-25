@@ -1,4 +1,4 @@
-/* GraphView.css - Cytoscape network view container (Crisp Light Theme) */
+/* GraphView.css — Cytoscape network topology view (Light civic theme) */
 
 .graph-view-container {
   position: relative;
@@ -9,10 +9,115 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
 }
 
+/* ---- Top bar: title pill + action buttons ---- */
+.graph-top-bar {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  right: 14px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.graph-title-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #334155;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.graph-title-pill svg {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.graph-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.graph-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.07);
+  transition: all 0.15s ease;
+}
+
+.graph-action-btn:hover {
+  background: #ffffff;
+  border-color: #94a3b8;
+  color: #0f172a;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+}
+
+.graph-action-btn svg {
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+/* ---- Cytoscape canvas fills the container ---- */
 .cytoscape-canvas {
   width: 100%;
   height: 100%;
   background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+}
+
+/* ---- Bottom footer bar ---- */
+.graph-footer-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 14px;
+  background: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(203, 213, 225, 0.7);
+  pointer-events: none;
+}
+
+.graph-footer-label {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.graph-footer-count {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #94a3b8;
 }
