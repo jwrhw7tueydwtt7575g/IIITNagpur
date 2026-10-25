@@ -1,11 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
 import { useAuth } from './context/AuthContext.jsx';
-import ProtectedRoute from './components/Auth/ProtectedRoute.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
 
 import DashboardHeader from './components/Dashboard/DashboardHeader.jsx';
 import Sidebar from './components/Dashboard/Sidebar.jsx';
@@ -36,7 +32,7 @@ import NepalReferenceView from './components/NepalMap/NepalReferenceView.jsx';
 import { API_BASE as API } from './config.js';
 
 function Dashboard() {
-  const { user, logout, fetchWithAuth } = useAuth();
+  const { fetchWithAuth } = useAuth();
 
   // Active navigation tabs: 'dashboard' | 'simulation' | 'infrastructure' | 'risk_analysis' | 'emergency_routing' | 'historical_replay' | 'reports' | 'settings'
   const [activeNav, setActiveNav] = useState('dashboard');
@@ -327,8 +323,8 @@ function Dashboard() {
             if (activeNav !== 'dashboard') setActiveNav('dashboard');
           }}
           nodes={graph?.nodes || []}
-          user={user}
-          onLogout={logout}
+          user={null}
+          onLogout={undefined}
           selectedLocation={selectedLocation}
           setSelectedLocation={setSelectedLocation}
         />
@@ -353,12 +349,7 @@ function Dashboard() {
               {/* 1. Dashboard View (Master Command Center) */}
               {activeNav === 'dashboard' && (
                 <div className="dashboard-content-area">
-                  {/* Top KPI Cards Row with India Gate Feature Card */}
-                  <KpiCards
-                    graph={graph}
-                    _simulation={simulation}
-                    onSelectNode={setSelectedNode}
-                  />
+                  <div className="map-focus-intro"><div><span>SIMULATED GEOSPATIAL COMMAND CENTER</span><h2>Delhi Disaster Cascade Map</h2><p>Explore infrastructure failures, risk propagation and safer emergency corridors on the interactive map.</p></div><strong>{graph?.nodes?.length ?? 0} assets · {simulation?.failed_nodes?.length ?? 0} failures</strong></div>
 
                   {/* Center Visual & Right Inspector Split */}
                   <div className="center-workspace-grid">
@@ -417,6 +408,7 @@ function Dashboard() {
                     </div>
                   </div>
 
+                  <KpiCards graph={graph} _simulation={simulation} onSelectNode={setSelectedNode} />
                   {/* Master Map Legend & Live Traffic Alerts (Matching Reference Screenshot) */}
                   <div className="dashboard-map-bottom-grid">
                     <div className="map-bottom-legend-col">
@@ -629,19 +621,4 @@ function Dashboard() {
   );
 }
 
-export default function App() {
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route
-        path="/*"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
-    </Routes>
-  );
-}
+export default function App() { return <Dashboard />; }
