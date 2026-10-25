@@ -1,229 +1,71 @@
-# CityGraph — Urban Infrastructure Risk Intelligence
+# CityGraph
 
-> A smart-city decision-support platform for cascading-failure simulation, historical flood replay, GIS visualization, and resilient emergency routing.
+A smart-city risk intelligence platform for modeling cascading infrastructure failures, flood replay, historical scenario analysis, and warning-oriented forecasting. The repository combines a FastAPI backend, a React + Vite frontend, and a research-oriented simulation/forecasting engine for multi-hazard urban resilience analysis.
 
-**[Live interface](https://citygraph-intelligence.vercel.app/) · [Source code](https://github.com/rajsalonia/citygraph) · [Architecture](#system-architecture) · [Run locally](#-run-locally)**
+This codebase is best understood as a prototype and research dashboard rather than a live operational emergency system.
 
-> **Prototype scope:** Synthetic infrastructure scenarios and reconstructed historical references. Not intended for live emergency operations or evacuation decisions.
+## What this repository contains
 
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/Frontend-React%2019-61DAFB.svg?style=flat&logo=react)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Bundler-Vite%208-646CFF.svg?style=flat&logo=vite)](https://vitejs.dev/)
-[![NetworkX](https://img.shields.io/badge/Graph%20Engine-NetworkX-orange.svg?style=flat)](https://networkx.org/)
-[![Leaflet](https://img.shields.io/badge/GIS-Leaflet-199900.svg?style=flat&logo=leaflet)](https://leafletjs.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+- `backend/`: FastAPI application, auth, route logic, and historical/nepal/warning endpoints
+- `frontend/`: React application for dashboard, maps, infrastructure views, and scenario visualization
+- `sim/`: synthetic city simulator and ground-truth generation
+- `engine/`: forecasting, state estimation, dependency discovery, intervention planning, and explainability
+- `adapters/`: data ingestion adapters and offline fixture-backed fallbacks
+- `ingest/`: event ingestion and replay clock utilities
+- `quality/`: data quality, credibility, and fault detection logic
+- `configs/`: scenario, city, and system configuration files
+- `eval/`: metrics and reporting for baseline runs
+- `tests/`: automated checks for adapters, backend API, engine behavior, and simulator logic
 
----
+## High-level capabilities
 
-## 📌 Overview
+- Cascading failure simulation for synthetic urban infrastructure networks
+- Historical Delhi flood replay based on the July 2023 Yamuna flood period
+- Nepal flash-flood reference scenario for illustrative evacuation analysis
+- Route and resilience planning against simulated infrastructure degradation
+- Warning-system API with multi-hour forecasting and risk-state evaluation
+- Interactive frontend dashboard with map and network views
 
-Modern cities are interconnected systems. A failure in one infrastructure sector can affect other sectors through shared dependencies.
+## Architecture at a glance
 
-For example:
+- Frontend: React + Vite + Leaflet + Cytoscape-style visualization pipeline
+- Backend: FastAPI + SQLAlchemy + JWT-based auth layer
+- Simulation engine: synthetic event generation, dependency graphs, forecasting, and intervention planning
+- Data sources: built-in fixtures, JSON/GeoJSON scenarios, and adapter-based live-data stubs
 
-- Drainage pump stations may become overloaded during heavy rainfall.
-- Floodwater may affect roads and underpasses.
-- Damaged roads may reduce access to hospitals and emergency services.
-- Power failures may increase the risk of secondary infrastructure failures.
+## Quick start
 
-**CityGraph** models these dependencies as a graph and provides an interactive environment for exploring infrastructure risks, flood scenarios, and emergency routes.
+### 1) Backend setup
 
-The platform combines:
-
-- Graph theory
-- Cascading-failure simulation
-- GIS-based visualization
-- Historical event replay
-- Risk-weighted route planning
-- Interactive infrastructure inspection
-
-> **Important:** CityGraph is an educational and research-oriented prototype. It is not a live emergency-management system.
-
----
-
-## 🎯 Problem Statement
-
-Traditional emergency dashboards often display maps, charts, or isolated sensor information. They may not clearly show how a failure in one infrastructure sector can affect another connected sector.
-
-CityGraph addresses this problem by combining graph-based infrastructure modeling, spatial visualization, and simulated failure propagation in one interactive platform.
-
-The project focuses on helping users explore:
-
-- Infrastructure dependencies
-- Potential cascading failures
-- Flood-affected corridors
-- Asset-level risk
-- Emergency route alternatives
-- Historical flood scenarios
-
----
-
-## 🚀 Key Features
-
-### 1. Synthetic Delhi Infrastructure Network
-
-The project includes a synthetic urban infrastructure graph containing:
-
-- Hospitals and trauma-care facilities
-- Fire dispatch headquarters
-- Stormwater pumping stations
-- Power substations
-- Arterial road corridors
-- Interconnected infrastructure dependencies
-
-The simulation demonstrates how stress in one infrastructure sector can propagate through connected assets.
-
-#### Main capabilities
-
-- Graph-based infrastructure representation
-- Heavy-rainfall stress simulation
-- Cascading-failure propagation
-- Asset-level diagnostics
-- Failure-reason display
-- Capacity and risk inspection
-- Connected-road analysis
-- Risk-weighted emergency routing
-
-The route solver uses graph-based shortest-path calculations to identify corridors that avoid simulated failures.
-
----
-
-### 2. Delhi Historical Flood Replay
-
-This module provides a historical reference replay based on the July 2023 Yamuna flood event in Delhi.
-
-Features include:
-
-- Chronological flood-event timeline
-- Historical water-level visualization
-- Flood-affected area overlays
-- Road-status visualization
-- GeoJSON-based flood layers
-- Historical route analysis
-- Interactive GIS map
-
-The module demonstrates how historical flood information can be explored through a visual and interactive interface.
-
-> **HISTORICAL REFERENCE DATA — NOT FOR LIVE EMERGENCY USE**
-
-The flood layers and road classifications are reconstructed for demonstration and should not be treated as real-time operational data.
-
----
-
-### 3. Nepal Flash-Flood Reference Scenario
-
-CityGraph also includes a simulated mountain-valley scenario representing flash-flood conditions in steep terrain.
-
-The scenario includes:
-
-- Valley-floor infrastructure
-- Mid-slope infrastructure
-- High-ridge evacuation points
-- Flooded river corridors
-- Debris-flow road blockages
-- Hydropower-related infrastructure
-- Evacuation route visualization
-
-The evacuation route demonstrates movement from lower-elevation areas toward safer elevated locations.
-
-> **SIMULATED REFERENCE MODEL — NOT AN OFFICIAL OR LIVE MONITORING FEED**
-
-This scenario is illustrative and does not represent live conditions or precise survey data for a specific Himalayan location.
-
----
-
-### 4. Interactive Visualizations
-
-The frontend provides multiple visualization modes:
-
-- Cytoscape.js network graph
-- Leaflet GIS map
-- Historical flood timeline
-- Custom SVG mountain-valley visualization
-- Asset diagnostic panels
-- Risk and failure indicators
-- Route overlays
-
-These visualizations help users understand infrastructure dependencies and simulated emergency conditions.
-
----
-
-### 5. Authentication and Session Management
-
-The application includes a local authentication flow using:
-
-- JWT bearer tokens
-- Password hashing
-- SQLite database
-- Protected API routes
-- User registration and login
-- Current-user profile endpoint
-
-The authentication system is intended for local development and demonstration.
-
-> **Security note:** Configure strong secrets and production-grade authentication before deploying the application publicly.
-
----
-
-## System Architecture
-
-```mermaid
-flowchart TD
-    subgraph Client["Frontend — React + Vite"]
-        UI["CityGraph Dashboard"]
-        Router["React Router"]
-        Auth["Authentication Context"]
-        Cytoscape["Cytoscape.js Graph"]
-        Leaflet["Leaflet GIS Map"]
-        SVG["Mountain Valley SVG"]
-    end
-
-    subgraph Server["Backend — FastAPI"]
-        API["FastAPI Gateway"]
-        AuthAPI["Authentication API"]
-        GraphAPI["Graph and Simulation API"]
-        HistoricalAPI["Historical Flood API"]
-        NepalAPI["Nepal Scenario API"]
-        NetworkX["NetworkX Graph Engine"]
-        Shapely["Shapely Spatial Engine"]
-        Database[("SQLite Database")]
-    end
-
-    UI --> Router
-    Router --> Auth
-    Auth --> API
-
-    API --> AuthAPI
-    API --> GraphAPI
-    API --> HistoricalAPI
-    API --> NepalAPI
-
-    AuthAPI --> Database
-    GraphAPI --> NetworkX
-    HistoricalAPI --> Shapely
-
-    GraphAPI --> Cytoscape
-    HistoricalAPI --> Leaflet
-    NepalAPI --> SVG
-```
-
----
-
-## 🧑‍💻 Run Locally
-
-**Requirements:** Python 3.11+, Node.js 20+, and npm. The Python API and Vite frontend run as separate local processes.
-
-**Backend** (terminal 1):
+From the repo root:
 
 ```bash
 cd backend
-python -m venv .venv
-# Activate .venv (Windows: .venv\\Scripts\\activate; macOS/Linux: source .venv/bin/activate)
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+Copy the example environment file if needed:
+
+```bash
+cp .env.example .env
+```
+
+Then start the API:
+
+```bash
 uvicorn main:app --reload --port 8000
 ```
 
-**Frontend** (terminal 2, from the repository root):
+The backend is configured to run locally at:
+
+- http://127.0.0.1:8000
+- API docs: http://127.0.0.1:8000/docs
+
+### 2) Frontend setup
+
+From the repo root:
 
 ```bash
 cd frontend
@@ -231,73 +73,95 @@ npm install
 npm run dev
 ```
 
-Set the documented environment values from [`.env.example`](.env.example), especially a strong backend secret, when using authentication. See [`render.yaml`](render.yaml) for the example backend hosting configuration.
+The frontend development server typically runs at:
 
-## 🧩 Engineering Highlights
+- http://localhost:5173
 
-- **Graph modeling:** NetworkX infrastructure dependencies, cascading failures, and failure-aware shortest paths.
-- **Geospatial interaction:** Leaflet and spatial overlays for historical and illustrative flood scenarios.
-- **API architecture:** FastAPI endpoints connect graph simulation, historical data, and visualization modules.
-- **Authentication demo:** JWT-based API access with SQLite-backed user records; harden before public production use.
+If the frontend needs to call a different backend URL, set:
 
-## ⚠️ Data & Deployment Notes
+```bash
+VITE_API_URL=http://127.0.0.1:8000
+```
 
-- Infrastructure networks, Nepal valley conditions, and failure outcomes are simulations or reconstructed educational references, **not live operational feeds**.
-- The frontend demo URL is provided for portfolio access; availability depends on the external host and the configured backend.
-- Do not use generated routes or risk values to direct actual emergency response.
+## Environment and configuration
 
-## 🔗 Project Links
+Key project settings are defined in:
 
-- **Frontend demo:** https://citygraph-intelligence.vercel.app/
-- **Code:** https://github.com/rajsalonia/citygraph
-- **Contributing:** [Contribution guide](CONTRIBUTING.md)
-- **Security:** [Responsible disclosure](SECURITY.md)
-- **License:** [MIT](LICENSE)
+- `.env.example`
+- `backend/.env.example`
+- `frontend/src/config.js`
 
----
+Important notes:
 
-## The 72-Hour Warning (new engine module)
+- Do not commit real secrets or production credentials.
+- The project includes demo-style auth and local development defaults.
+- CORS, JWT secret, and base URL settings should be reviewed before public deployment.
 
-CityGraph now includes an experimental temporal forecasting engine under
-`sim/`, `engine/`, `ingest/`, `quality/`, `twin/`, `adapters/`, `eval/`,
-and `api/`. The original React + Vite + Leaflet + Cytoscape shell remains
-available under `frontend/`; the new API runs separately.
+## Operational status and model limits
 
-### Run new engine
+This project is explicitly a research prototype:
+
+- City infrastructure graphs are synthetic or reconstructed for demonstration purposes.
+- Historical flood replay data is educational reference material and not equivalent to operational monitoring data.
+- Warning and forecast outputs are baseline research outputs and should not be used for real emergency dispatch decisions without domain validation.
+- Live adapters exist but are designed with offline-safe fallbacks and should be validated for production use before deployment.
+
+## Useful project commands
+
+From the repo root:
 
 ```bash
 make sim
 make eval
 make test
-make demo
 ```
 
-Docker:
+The project also ships with a simple container setup:
 
 ```bash
 docker compose up --build
 ```
 
-Open the evaluation report at `eval/report/index.html`.
+## Repository structure summary
 
-### Honest limitations and metrics
+```text
+.
+├── backend/                # FastAPI service
+├── frontend/               # React dashboard
+├── adapters/               # Data connectors and offline fixtures
+├── configs/                # scenarios and city configuration
+├── engine/                 # forecasting / state / intervention modules
+├── eval/                   # evaluation harness and metrics output
+├── ingest/                 # ingestion and replay logic
+├── quality/                # data health and credibility checks
+├── sim/                    # synthetic simulator and ground truth
+├── tests/                  # automated test suite
+├── Dockerfile
+├── docker-compose.yml
+├── Makefile
+├── README.md
+├── requirements.txt
+├── .env.example
+└── backend/.env.example
+```
 
-- Baseline evaluation currently uses a deterministic synthetic 72-hour simulator
-  plus replay-style observations, not live city feeds.
-- The particle filter and baselines are intentionally simple, CPU-only, and auditable.
-- Metrics in `eval/report/metrics.json` report baseline MAE risk and state
-  accuracy by horizon; they are not claims of operational readiness.
-- Real public feeds are represented by adapters with offline fallback fixtures;
-  deployment-specific validation is still required.
-- Twin state covers non-public internal systems (power, hospitals, ambulances,
-  emergency calls) and is simulated, not measured.
+## Security and compliance notes
 
-## Held-out city metrics (honest baseline)
+- Authentication is intended for local/demo use and should be hardened before deployment.
+- Sensitive environment values must be kept out of source control.
+- Historical and simulated risk information is not a substitute for real-world situational assessment or official public alert systems.
 
-| City | Split | Metric | Value |
-|------|-------|--------|-------|
-| Delhi | dev / replay | Temporal MAE (risk) | see eval/report/metrics.json |
-| Mumbai | held-out (no tuning) | Temporal MAE (risk) | 0.12 (illustrative baseline, rerun to reproduce) |
-| Delhi | synthetic | State accuracy | 1.00 baseline |
+## License
 
-Honest limitations: metrics are baseline-only, synthetic/replay-driven, and should not be used for operational emergency decisions. Real feeds require provider credentials and connectivity.
+This project is licensed under the MIT License. See `LICENSE` for details.
+
+## Contributing
+
+Please read `CONTRIBUTING.md` before submitting changes.
+
+## Related documentation
+
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `backend/routers/*` for API route definitions
+- `frontend/src/` for UI and interaction logic
