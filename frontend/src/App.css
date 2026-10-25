@@ -2299,3 +2299,5 @@ button, select, input {
   cursor: pointer;
   font-size: 14px;
 }
+/* ORCATHON map-first layout */
+.map-focus-intro{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 18px;background:linear-gradient(115deg,#142640,#17384c);border:1px solid #315a73;border-radius:12px;color:#e6f3ff}.map-focus-intro span{font-size:10px;letter-spacing:1px;color:#64d8ec;font-weight:750}.map-focus-intro h2{margin:3px 0;font-size:24px;color:white}.map-focus-intro p{margin:0;font-size:12px;color:#c4d3e1}.map-focus-intro strong{white-space:nowrap}.center-workspace-grid{grid-template-columns:minmax(0,1fr) minmax(270px,300px)}@media(max-width:1250px){.center-workspace-grid{grid-template-columns:1fr}}@media(max-width:700px){.map-focus-intro{flex-direction:column;align-items:flex-start}.map-focus-intro h2{font-size:19px}}
